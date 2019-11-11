@@ -1,0 +1,4 @@
+name = "AgnosticBayesEnsemble"
+uuid = "c45979d0-65bc-461f-b799-33f894c17e9f"
+authors = ["Jules Rasetaharison <Jules.Rasetaharison@auticon.de>"]
+version = "0.1.0"
