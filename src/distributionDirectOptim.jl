@@ -101,18 +101,20 @@ predMatTraining = convert( Matrix{Float64}, predTraining );
 predMatEval     = convert( Matrix{Float64}, predEval );
 errMatTraining  = ( repeat(  Float64.( y ),outer = [1,size(predictions,2)] ) .- predictions ).^2;
 
-## learning curve bootstrap
-precision = zeros( Float64, 150 )
-for (i,sampleSize) in enumerate( collect( 1:1:150 ) )
-  p              = bootstrapPosteriorEstimation( Matrix( errMatTraining ), sampleSize, 20000 );
-  predictionEnsB = round.( Int64, predictEnsemble( convert(Matrix{Float64},predMatEval), p ) );
-  precision[i]   = sum( Int64.(y[limit+1:end]) .== predictionEnsB ) / size( predictionEnsB, 1 )
-end
+
 
 ## learning curve bootstrap cor
 precision = zeros( Float64, 1000 )
 @showprogress 1 "Computing..." for (i,sampleSize) in enumerate( collect( 1:10:10000 ) )
   p              = bootstrapPosteriorCorEstimation( Matrix( predMatTraining ), Float64.(y[1:limit]), sampleSize, 50000 );
+  predictionEnsB = round.( Int64, predictEnsemble( convert(Matrix{Float64},predMatEval), p ) );
+  precision[i]   = sum( Int64.(y[limit+1:end]) .== predictionEnsB ) / size( predictionEnsB, 1 )
+end
+
+## learning curve bootstrap
+precision = zeros( Float64, 150 )
+for (i,sampleSize) in enumerate( collect( 1:1:150 ) )
+  p              = bootstrapPosteriorEstimation( Matrix( errMatTraining ), sampleSize, 20000 );
   predictionEnsB = round.( Int64, predictEnsemble( convert(Matrix{Float64},predMatEval), p ) );
   precision[i]   = sum( Int64.(y[limit+1:end]) .== predictionEnsB ) / size( predictionEnsB, 1 )
 end

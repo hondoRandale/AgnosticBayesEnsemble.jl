@@ -1,13 +1,13 @@
-include( "AgnosticBayesEnsemble.jl" )
-include( "gradientDescendOptimizePosterior.jl" )
+include( "../src/AgnosticBayesEnsemble.jl" )
+include( "../src/gradientDescentOptimizePosterior.jl" )
 using DataFrames
 using Random
 using Statistics
-using StaticArrays
 using Test
 using Optim
 using MultivariateStats
 
+println( "running gradient descent algorithms unit tests" );
 
 function distortBinaryPrediction( y::BitArray{1}, distortionFactor::Float64 )
   res          = deepcopy( y );   
@@ -79,34 +79,11 @@ lossUni                   = mean( hingeLoss( AgnosticBayesEnsemble.predictEnsemb
 lossLinearBasisNormalized = mean( hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorStart ), tHopfield ) );
 result = δOptimizationHinge( posteriorStart, YHopfield, tHopfield, 20 );
 
-#== random init posterior n times ==#
+resultDF, parameterEvalDf = δTuneHingeMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=20, siblings=100 );
+resultDF, parameterEvalDf = δTuneMSEMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=20, siblings=100 );
 
-using ProgressMeter
-nrRuns = 200;
-resMat = zeros( Float64, nrRuns, d );
-@showprogress 1 "Computing..." for i in 1:1:nrRuns
-  posterior   = randPosterior( d );
-  result      = δOptimizationMSE( posterior, YHopfield, tHopfield, 20 );
-  resMat[i,:] = Optim.minimizer( result );
-end
+show( resultDF )
+show( parameterEvalDf )
 
-μPosterior =  mean( resMat, dims=1 );
-resMat   .-=  μPosterior;
-σPosterior = std( resMat, dims=1 );
-σPosterior ./ μPosterior;
-
-@test sum( μPosterior ) ≈ 1.0
-
-#== random init posterior n times ==#
-nrRuns = 200;
-resMat = zeros( Float64, nrRuns, width );
-
-nrRunsRange     = ( 10, 30 );
-αRange          = ( 0.0, 2.0 );
-βRange          = ( 0.0, 2.0 );
-relEntropyRange = ( 0.65, 0.99 );
-generations     = 5;
-siblings        = 400;
-T               = tHopfield;
 
 

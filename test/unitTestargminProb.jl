@@ -1,5 +1,7 @@
-include( "argminProb.jl" )
+include( "../src/argminProb.jl" )
 using Test
+
+  println( "running argminProb unit tests" );
 
   vec = repeat( [2.0], outer=[3 1] )[:,1];
   append!( vec, rand( 4.0:20.0, 100 ) );

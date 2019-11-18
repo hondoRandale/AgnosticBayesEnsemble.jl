@@ -1,0 +1,7 @@
+include( "unitTestargminProb.jl" )
+include( "unitTestBootStrapCorEstimation.jl" )
+include( "unitTestBootstrapEstimation.jl" )
+include( "unitTestDirichletPosterior.jl" )
+include( "unitTestsgradientDesend.jl" )
+include( "unitTestLossF.jl" )
+include( "unitTestDirectSolution.jl" )

@@ -2,8 +2,6 @@ include( "argminProb.jl" )
 include( "lossFunctions.jl" )
 
 using Distributions
-using JuMP
-using Ipopt
 using LinearAlgebra
 using ProgressMeter
 using Match

@@ -1,17 +1,28 @@
 module AgnosticBayesEnsemble
   using Optim
-  export TDistPosteriorEstimation, GMatrix, dirichletPosteriorEstimation, bootstrapPosteriorEstimation, predictEnsemble
+  export TDistPosteriorEstimation, GMatrix, 
+         dirichletPosteriorEstimation, metaParamSearchDirichletOptv2, 
+         dirichletPosteriorEstimationV2, dirichletPosteriorEstimation!,
+         metaParamSearchValidationDirichlet, dirichletPosteriorEstimationPv1,
+         bootstrapPosteriorEstimation, bootstrapPosteriorEstimation!,
+         bootstrapPosteriorEstimationP,
+         bootstrapPosteriorCorEstimation,
+         TDistPosteriorEstimation, TDistPosteriorEstimationReference,
+         predictEnsemble
   include( "bootstrapPosteriorCorEstimation.jl" )
   include( "dirichletPosteriorEstimation.jl" )
   include( "bootstrapPosteriorEstimation.jl" )
   include( "TDistPosteriorEstimation.jl" )
+  include( "gradientDescentOptimizePosterior.jl" )
+  include( "directSolution.jl" )
   
+
   ## @param:  p       Vector{Float64}
   ## @param:  predMat Matrix{Float64}
   ## @param:  y       Vector{Float64}  
   ## @brief:  objective function measuring the performance of a solution
   ## @return: objective/error score 
-  function objFunctionSquare( p::Vector{Float64}; predMat::Matrix{Float64}, y::Vector{Float64} )
+  function objFunctionSquare( p::Vector{Float64}; predMat::Matrix{Float64}, t::Vector{Float64} )
     return mean( ( predMat * p - y ) .^ 2 );
   end
 
@@ -33,7 +44,7 @@ module AgnosticBayesEnsemble
     @assert size( predMat, 1 ) == size( groundTruthMat, 1 )  
     numberSamples = size( predMat, 1 );
     width         = size( predMat, 2 );
-    f(p)          = objFunctionSquare( p,predMat=predMat, groundTruthMat=groundTruthMat )
+    f(p)          = objFunctionSquare( p,predMat=predMat, t=t );
     resultObject  = optimize( f, p );
     Optim.minimizer( resultObject )
   end
