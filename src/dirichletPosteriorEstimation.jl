@@ -33,10 +33,11 @@ function metaParamSearchDirichletOptv2( initial_x::Vector{Float64}, predMat::Mat
   od = OnceDifferentiable( f, g!, initial_x );
   return Optim.minimizer( optimize( od, initial_x, lowerBound, upperBound, Fminbox{GradientDescent}() ) );
 end
-
+  """
   ## @param:  num     Int64 decimal number to be converted
   ## @brief:  convert Int64 to binary string
   ## @return: string - binary endoded number
+  """
   function tobin( num::Int64 )
     @match num begin
       0 => "0"
@@ -44,10 +45,12 @@ end
       _ => string( tobin( div( num, 2 ) ), mod( num, 2 ) )
     end
   end
-
+  
+  """
   ## @param:  d     - Int64  number of hypothesis
   ## @brief:  compute transfoemation matrix G
   ## @return: transformation matrix G
+  """
   function GMatrix( d::Int64 )
     N   = 2^d;
     mat = Matrix{Float64}( undef, d, N );
@@ -57,12 +60,14 @@ end
     return mat;
   end
 
+  """
   ## @param:  predictions    Matrix           - each column is prediction of one hypothesis
   ## @param:  G              Matrix           - transformation matrix computed by matrixG
   ## @param:  nrRuns         Int64            - number of passes over predictions
   ## @param:  α_             VariableRef      - scalar prior parameter
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function dirichletPosteriorEstimation( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_ )
     ## number of prediction models to combine
     m = size( errMat )[1];
@@ -102,12 +107,14 @@ end
     return  res ./ nrRuns; 
   end
 
+  """
   ## @param:  predictions    Matrix           - each column is prediction of one hypothesis
   ## @param:  G              Matrix           - transformation matrix computed by matrixG
   ## @param:  nrRuns         Int64            - number of passes over predictions
   ## @param:  α_             Float64          - scalar prior parameter
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function dirichletPosteriorEstimation( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
     ## number of prediction models to combine
     m = size( errMat )[1];
@@ -194,34 +201,40 @@ end
     end
     return  res ./ sum( res ); 
   end
-  
+
+  """
   ## @param:  errMat         Matrix           - each column is prediction of one hypothesis 
   ## @param:  nrRuns         Int64            - number of sampling runs
   ## @param:  α_             Float64          - scalar prior parameter
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function dirichletPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
     d = size( errMat )[2];
     G = GMatrix( d );
     return dirichletPosteriorEstimation( errMat, G, nrRuns, α_ );
   end
 
-   ## @param: errMat         Matrix           - each column is prediction of one hypothesis 
+  """
+  ## @param: errMat         Matrix           - each column is prediction of one hypothesis 
   ## @param:  nrRuns         Int64            - number of sampling runs
   ## @param:  α_             Any              - scalar prior parameter
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function dirichletPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64, α_ )
     d = size( errMat )[2];
     G = GMatrix( d );
     return dirichletPosteriorEstimation( errMat, G, nrRuns, α_ );
   end
 
+  """
   ## @param:  errMat         Matrix           - each column is prediction of one hypothesis 
   ## @param:  nrRuns         Int64            - number of sampling runs
   ## @param:  α_             Float64          - scalar prior parameter
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function dirichletPosteriorEstimationV2( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64, sampleSize::Int64 )
     d = size( errMat )[2];
     G = GMatrix( d );

@@ -2,11 +2,13 @@ include( "argminProb.jl" )
 using ProgressMeter
 using StaticArrays
 
+  """
   ## @param:  errMat         Matrix           - each column is prediction of one hypothesis
   ## @param:  samplingFactor Float64          - relative samples taken per iteration 
   ## @param:  nrRuns         Int64            - number of iterations over entire set
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function bootstrapPosteriorEstimation( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
     len      = size( errMat, 1 );
     width    = size( errMat, 2 );
@@ -19,11 +21,13 @@ using StaticArrays
     return  res ./ nrRuns; 
   end
 
+  """
   ## @param:  errMat         Matrix           - each column is prediction of one hypothesis
   ## @param:  samplingFactor Float64          - relative samples taken per iteration 
   ## @param:  nrRuns         Int64            - number of iterations over entire set
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function bootstrapPosteriorEstimation!( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64, p::Array{Float64} )
     pB = bootstrapPosteriorEstimation( Matrix( errMat ), samplingBatchSize, nrRuns );
     for (i,val) in enumerate( pB )
@@ -31,11 +35,13 @@ using StaticArrays
     end 
   end
 
+  """
   ## @param:  errMat         Matrix           - each column is prediction of one hypothesis
   ## @param:  samplingFactor Float64          - relative samples taken per iteration 
   ## @param:  nrRuns         Int64            - number of iterations over entire set
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function bootstrapPosteriorEstimationP( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
     tasks = Vector{Task}( undef, Threads.nthreads() );
     width = size( errMat, 2 );

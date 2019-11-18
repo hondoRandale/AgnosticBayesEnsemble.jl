@@ -10,10 +10,12 @@
     
   end
 
+  """
   ## @param:  predictions    Matrix           - each column is prediction of one hypothesis 
   ## @param:  nrRuns         Int64            - number of sampling runs
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function TDistPosteriorEstimationReference( errMat::Matrix{Float64}, nrRuns::Int64 )
     m   = size( errMat )[1];
     d   = size( errMat )[2];
@@ -44,6 +46,7 @@
     return  res ./ nrRuns;
   end
 
+  """
   ## @param:  predictions Matrix  - each column is prediction of one hypothesis 
   ## @param:  nrRuns      Int64   - number of sampling runs
   ## @param:  κ_0         Float64 - regularization param
@@ -52,6 +55,7 @@
   ## @param:  β           Float64 - regularization param
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior   Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function TDistPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64; κ_0::Float64=1.0, v_0::Float64=Float64( size( errMat, 2 ) ), α::Float64=0.5, β::Float64=0.25 )
     m   = size( errMat )[1];
     d   = size( errMat )[2];

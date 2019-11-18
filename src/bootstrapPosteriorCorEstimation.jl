@@ -2,13 +2,15 @@ include( "argminProb.jl" )
 using ProgressMeter
 using LinearAlgebra
 
-## @param:  predictions    Matrix{Float64}  - each column is prediction of one hypothesis
-## @param:  y              Array{Float64,1} - ground truth label vector
-## @param:  samplingFactor Float64          - relative samples taken per iteration 
-## @param:  nrRuns         Int64            - number of iterations over entire set
-## @brief:  compute posterior p( h* = h | S )
-## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
-function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, y::Array{Float64,1}, samplingBatchSize::Int64, nrRuns::Int64 )
+  """
+  ## @param:  predictions    Matrix{Float64}  - each column is prediction of one hypothesis
+  ## @param:  y              Array{Float64,1} - ground truth label vector
+  ## @param:  samplingFactor Float64          - relative samples taken per iteration 
+  ## @param:  nrRuns         Int64            - number of iterations over entire set
+  ## @brief:  compute posterior p( h* = h | S )
+  ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
+  function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, y::Array{Float64,1}, samplingBatchSize::Int64, nrRuns::Int64 )
     len      = size( predictions )[1];
     width    = size( predictions )[2];
     lenCache = samplingBatchSize;
@@ -21,11 +23,13 @@ function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, y::Array
     return  res ./ nrRuns; 
   end
   
+  """
   ## @param:  predictions    Matrix           - each column is prediction of one hypothesis
   ## @param:  samplingFactor Float64          - relative samples taken per iteration 
   ## @param:  nrRuns         Int64            - number of iterations over entire set
   ## @brief:  compute posterior p( h* = h | S )
   ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+  """
   function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, y::Matrix{Float64}, samplingFactor::Float64, nrRuns::Int64 )
     len      = size( predictions )[1];
     width    = size( predictions )[2];

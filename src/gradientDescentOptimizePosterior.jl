@@ -8,26 +8,32 @@ using Statistics
 using ProgressMeter
 include( "lossFunctions.jl" )
 
+  """
   ## @param:  d  Int64  number of outcomes
   ## @brief:  draw a random distributiob over d outputs
   ## @return: Vector{Float64} p with sum(p) == 1.0
+  """
   function randPosterior( d::Int64 )
     p = rand( collect(0.0:1e-3:10000.0), d );
     return p ./ sum(p);
   end
 
+  """
   ## @param:  Y  Matrix{Float64}
   ## @param:  t  Vector{Float64}
   ## @brief:  compute the rel. percantage each prediction represents the true function.
   ## @return: Vector{Float64}
+  """
   function posteriorLinearBasis( Y::Matrix{Float64}, t::Vector{Float64} ) 
     return ( transpose( Y ) * t ) ./ ( transpose(t) * t )
   end
 
+  """
   ## @param:  OutputVector - YOut::Vector{Float64} hopfield encoded label vector and return value
   ## @param:  InputVector  - YIn::Vector{Float64}  {0,1} encoded binary label vector
   ## @brief:  transform label encoding from {0,1} to {-1,1}
   ## @return: nothing
+  """
   function toHopfieldEncoding!( YOut::Vector{Float64}, YIn::Vector{Float64} )
     index0 = YIn .== 0;
     for i in 1:1:size( YIn, 1 )
@@ -39,10 +45,12 @@ include( "lossFunctions.jl" )
     end
   end
 
+  """
   ## @param:  OutputMatrix - YOut::Matrix{Float64} hopfield encoded label vector and return value
   ## @param:  InputMatrix  - YIn::Matrix{Float64}  {0,1} encoded binary label vector
   ## @brief:  transform label encoding from {0,1} to {-1,1}
   ## @return: nothing
+  """
   function toHopfieldEncoding!( YOut::Matrix{Float64}, YIn::Matrix{Float64} )
     for row in 1:1:size( YIn, 1 )
       for col in 1:1:size( YIn, 2 )
@@ -53,12 +61,14 @@ include( "lossFunctions.jl" )
     end
   end
 
+  """
   ## @param:  cache     Vector{Float64}  resulting gradient
   ## @param:  posterior Vector{Float64}  starting solution
   ## @param:  predMat   Matrix{Float64}  prediction Matrix -one column foreach prediction model-
   ## @param:  T         Vector{Float64}  ground truth label vector
   ## @brief:  compute gradient under hinge loss function
   ## @return: nothing
+  """
   function gradientHinge!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64} )
     width  = size( predMat, 2 );
     height = size( predMat, 1 );
@@ -68,6 +78,7 @@ include( "lossFunctions.jl" )
     end    
   end
 
+  """
   ## @param:  cache     Vector{Float64}  resulting gradient
   ## @param:  posterior Vector{Float64}  starting solution
   ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
@@ -77,6 +88,7 @@ include( "lossFunctions.jl" )
   ## @param:  entTarget Float64          regularization param 3
   ## @brief:  compute gradient under hinge loss function regularized
   ## @return: nothing
+  """
   function gradientHingeRegularized!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, α::Float64, β::Float64, entTarget::Float64 )
     width  = size( predMat, 2 );
     height = size( predMat, 1 );
@@ -88,12 +100,14 @@ include( "lossFunctions.jl" )
     end
   end
 
+  """
   ## @param:  cache     Vector{Float64}  resulting gradient
   ## @param:  posterior Vector{Float64}  starting solution
   ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
   ## @param:  T         Vector{Float64}  ground truth label vector
   ## @brief:  compute gradient under MSE function
   ## @return: nothing
+  """
   function gradientMSE!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64} )
     width  = size( predMat, 2 );
     height = size( predMat, 1 );  
@@ -104,6 +118,7 @@ include( "lossFunctions.jl" )
     end
   end
 
+  """
   ## @param:  cache     Vector{Float64}  resulting gradient
   ## @param:  posterior Vector{Float64}  starting solution
   ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
@@ -113,6 +128,7 @@ include( "lossFunctions.jl" )
   ## @param:  entTarget Float64          regularization param 3
   ## @brief:  compute gradient under hinge MSE function regularized
   ## @return: nothing
+  """
   function gradientMSERegularized!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, α::Float64, β::Float64, entTarget::Float64 )
     width  = size( predMat, 2 );
     height = size( predMat, 1 );  
@@ -125,12 +141,14 @@ include( "lossFunctions.jl" )
     end
   end
 
+  """
   ## @param: posterior Vector{Float64}  starting solution
   ## @param: predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
   ## @param: T         Vector{Float64}  ground truth label vector
   ## @param: max_iter  Int64            max. number of gradient iterations
   ## @brief: optmize initial solution posterior using gradient descend
   ## @return:
+  """
   function δOptimizationHinge( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64 )
     d               = size( predMat, 2 );  
     lower           = zeros( Float64, d );
@@ -145,6 +163,7 @@ include( "lossFunctions.jl" )
     results = Optim.optimize( f, g!, lower, upper, posterior, Optim.Fminbox( inner_optimizer ) )
   end    
 
+  """
   ## @param:  posterior Vector{Float64}  starting solution
   ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
   ## @param:  T         Vector{Float64}  ground truth label vector
@@ -154,6 +173,7 @@ include( "lossFunctions.jl" )
   ## @param:  entTarget Float64          regularization param 3
   ## @brief:
   ## @return:
+  """
   function δOptimizationHingeRegularized( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64, α::Float64, β::Float64, entTarget::Float64 )
     d               = size( predMat, 2 );  
     lower           = zeros( Float64, d );
@@ -168,11 +188,13 @@ include( "lossFunctions.jl" )
     results = Optim.optimize( f, g!, lower, upper, posterior, Optim.Fminbox( inner_optimizer ) )
   end
 
+  """
   ## @param:  posterior Vector{Float64}  starting solution
   ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
   ## @param:  T         Vector{Float64}  ground truth label vector
   ## @param:  max_iter  Int64            max. number of gradient iterations
   ## @return: 
+  """
   function δOptimizationMSE( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64 )
     d               = size( predMat, 2 );  
     lower           = zeros( Float64, d );
@@ -188,6 +210,7 @@ include( "lossFunctions.jl" )
     return results
   end   
 
+  """
   ## @param:  posterior Vector{Float64}  starting solution
   ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
   ## @param:  T         Vector{Float64}  ground truth label vector
@@ -197,6 +220,7 @@ include( "lossFunctions.jl" )
   ## @param:  entTarget Float64          regularization param 3
   ## @brief:  
   ## @return: nothing
+  """
   function δOptimizationMSERegularized( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64, α::Float64, β::Float64, entTarget::Float64 )
     d               = size( predMat, 2 );  
     lower           = zeros( Float64, d );
@@ -211,6 +235,7 @@ include( "lossFunctions.jl" )
     results = Optim.optimize( f, g!, lower, upper, posterior, Optim.Fminbox( inner_optimizer ) )
   end   
 
+  """
   ## @param:  posterior       Vector{Float64}        starting solution
   ## @param:  predMat         Matrix{Float64}        prediction Matrix - one column foreach prediction model -
   ## @param:  T               Vector{Float64}        ground truth label vector
@@ -222,6 +247,7 @@ include( "lossFunctions.jl" )
   ## @param:  siblings        Int64                  numbers of siblings per spawn
   ## @brief:  search for best regularization params using Mean Squared Error
   ## @return:
+  """
   function δTuneMSEMeta(;posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, nrRunsRange::Tuple{Float64,Float64}, αRange::Tuple{Float64,Float64}, βRange::Tuple{Float64,Float64}, relEntropyRange::Tuple{Float64,Float64}, generations::Int64, siblings::Int64 )
     nrPredRun       = Int64( 1e4 );
     d               = size( predMat, 2 );
@@ -269,7 +295,8 @@ include( "lossFunctions.jl" )
     end
     return resultDF, parameterEvalDf
   end  
-
+  
+  """
   ## @param:  posterior       Vector{Float64}        starting solution
   ## @param:  predMat         Matrix{Float64}        prediction Matrix - one column foreach prediction model -
   ## @param:  T               Vector{Float64}        ground truth label vector
@@ -281,6 +308,7 @@ include( "lossFunctions.jl" )
   ## @param:  siblings        Int64                  numbers of siblings per spawn
   ## @brief:  search for best regularization params using hingeLoss
   ## @return: 
+  """
   function δTuneHingeMeta(;posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, nrRunsRange::Tuple{Float64,Float64}, αRange::Tuple{Float64,Float64}, βRange::Tuple{Float64,Float64}, relEntropyRange::Tuple{Float64,Float64}, generations::Int64, siblings::Int64 )
     nrPredRun       = Int64( 1e5 );
     d               = size( predMat, 2 );
