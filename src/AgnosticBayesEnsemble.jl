@@ -14,7 +14,6 @@ module AgnosticBayesEnsemble
   include( "dirichletPosteriorEstimation.jl" )
   include( "gradientDescentOptimizePosterior.jl" )
   include( "bootstrapPosteriorEstimation.jl" )
-  ##include( "lossFunctions.jl" )
   include( "TDistPosteriorEstimation.jl" )
   include( "directSolution.jl" )
   

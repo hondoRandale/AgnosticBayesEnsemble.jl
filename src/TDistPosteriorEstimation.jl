@@ -1,4 +1,3 @@
-  ##include( "argminProb.jl" )
   using Distributions
   using ProgressMeter
 
