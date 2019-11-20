@@ -9,11 +9,13 @@ module AgnosticBayesEnsemble
          bootstrapPosteriorCorEstimation,
          TDistPosteriorEstimation, TDistPosteriorEstimationReference,
          predictEnsemble
+  include( "argminProb.jl" )       
   include( "bootstrapPosteriorCorEstimation.jl" )
   include( "dirichletPosteriorEstimation.jl" )
-  include( "bootstrapPosteriorEstimation.jl" )
-  include( "TDistPosteriorEstimation.jl" )
   include( "gradientDescentOptimizePosterior.jl" )
+  include( "bootstrapPosteriorEstimation.jl" )
+  ##include( "lossFunctions.jl" )
+  include( "TDistPosteriorEstimation.jl" )
   include( "directSolution.jl" )
   
 

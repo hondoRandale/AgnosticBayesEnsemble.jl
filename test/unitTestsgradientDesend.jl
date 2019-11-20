@@ -1,4 +1,4 @@
-include( "../src/AgnosticBayesEnsemble.jl" )
+##include( "../src/AgnosticBayesEnsemble.jl" )
 include( "../src/gradientDescentOptimizePosterior.jl" )
 using DataFrames
 using Random
@@ -64,9 +64,9 @@ yEnsHinge = AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorHinge );
 indexPos  = ( yEnsHinge .> 0.0 );
 toHopfieldEncoding!( yEnsHinge, Float64.( indexPos ) );
 
-lossLinearBasis = mean( hingeLoss( yEnsLinearBasis, tHopfield ) );
-lossHinge       = mean( hingeLoss( yEnsHinge, tHopfield ) );
-lossUni         = mean( hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorUni ), tHopfield ) );
+lossLinearBasis = mean( lossFunctions.hingeLoss( yEnsLinearBasis, tHopfield ) );
+lossHinge       = mean( lossFunctions.hingeLoss( yEnsHinge, tHopfield ) );
+lossUni         = mean( lossFunctions.hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorUni ), tHopfield ) );
 
 @test lossUni > lossHinge
 
@@ -75,15 +75,15 @@ baseSolution              = posteriorLinearBasis( YHopfield, tHopfield );
 γ                         = sum( baseSolution );
 posteriorStart            = baseSolution ./ γ;
 YHopfield                *= γ;
-lossUni                   = mean( hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorUni ), tHopfield ) );
-lossLinearBasisNormalized = mean( hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorStart ), tHopfield ) );
+lossUni                   = mean( lossFunctions.hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorUni ), tHopfield ) );
+lossLinearBasisNormalized = mean( lossFunctions.hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorStart ), tHopfield ) );
 result = δOptimizationHinge( posteriorStart, YHopfield, tHopfield, 20 );
 
-resultDF, parameterEvalDf = δTuneHingeMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=20, siblings=100 );
-resultDF, parameterEvalDf = δTuneMSEMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=20, siblings=100 );
+resultDF, parameterEvalDf = δTuneHingeMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=5, siblings=100 );
+resultDF, parameterEvalDf = δTuneMSEMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=5, siblings=100 );
 
-show( resultDF )
-show( parameterEvalDf )
+##show( resultDF )
+##how( parameterEvalDf )
 
 
 

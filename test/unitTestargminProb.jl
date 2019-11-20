@@ -8,7 +8,7 @@ using Test
   nrRuns = 100000;
   res    = zeros( Float64, 103 );
   for i in 1:1:nrRuns
-    index = argminProb( vec );
+    index = argminUniProb.argminProb( vec );
     res[index] += 1;
   end
   minVal = minimum( res[1:3] );

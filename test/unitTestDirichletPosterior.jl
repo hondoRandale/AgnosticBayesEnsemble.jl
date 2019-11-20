@@ -53,13 +53,13 @@ nrRuns      = 10000;
 
 #== ensemble prediction bayesion posterior ==#
 yEns      = sign.( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posterior ) ); 
-mean( hingeLoss( yEns, tHopfield ) );
+mean( lossFunctions.hingeLoss( yEns, tHopfield ) );
 
 #== ensemble prediction bayesion posterior fine tuned by gradient descend ==#
 result     = δOptimizationHinge( posterior, YHopfield, tHopfield, 20 );
 posterior2 = Optim.minimizer( result );
 yEns2      = sign.( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posterior2 ) ); 
-@test mean( hingeLoss( yEns2, tHopfield ) ) < mean( hingeLoss( yEns, tHopfield ) )
+@test mean( lossFunctions.hingeLoss( yEns2, tHopfield ) ) < mean( lossFunctions.hingeLoss( yEns, tHopfield ) )
 
 #== ensemble prediction bayesion posterior fine tuned by gradient descend regularized ==#
 result     = δOptimizationHingeRegularized( posterior, YHopfield, tHopfield, 20, 2.5, 0.5, -0.8*log( 1/16 ) );

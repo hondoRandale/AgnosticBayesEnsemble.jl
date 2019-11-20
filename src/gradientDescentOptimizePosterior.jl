@@ -6,7 +6,6 @@ using Optim
 using Random
 using Statistics
 using ProgressMeter
-include( "lossFunctions.jl" )
 
   """
   ## @param:  d  Int64  number of outcomes
@@ -158,7 +157,7 @@ include( "lossFunctions.jl" )
       gradientHinge!( cache, posterior, predMat, T );
     end
     function f( posterior )
-      return mean( hingeLoss.( predMat * posterior, T ) )
+      return mean( lossFunctions.hingeLoss.( predMat * posterior, T ) )
     end
     results = Optim.optimize( f, g!, lower, upper, posterior, Optim.Fminbox( inner_optimizer ) )
   end    
@@ -183,7 +182,7 @@ include( "lossFunctions.jl" )
       gradientHingeRegularized!( cache, posterior, predMat, T, α, β, entTarget );
     end
     function f( posterior )
-      return mean( hingeLoss.( predMat * posterior, T ) )
+      return mean( lossFunctions.hingeLoss.( predMat * posterior, T ) )
     end
     results = Optim.optimize( f, g!, lower, upper, posterior, Optim.Fminbox( inner_optimizer ) )
   end
@@ -204,7 +203,7 @@ include( "lossFunctions.jl" )
       gradientMSE!( cache, posterior, predMat, T );
     end
     function f( posterior )
-      return mean( MSE.( predMat * posterior, T ) )
+      return mean( lossFunctions.MSE.( predMat * posterior, T ) )
     end
     results = Optim.optimize( f, g!, lower, upper, posterior, Optim.Fminbox( inner_optimizer ) );
     return results
@@ -230,7 +229,7 @@ include( "lossFunctions.jl" )
       gradientMSERegularized!( cache, posterior, predMat, T, α, β, entTarget );
     end
     function f( posterior )
-      return mean( MSE.( predMat * posterior, T ) )
+      return mean( lossFunctions.MSE.( predMat * posterior, T ) )
     end
     results = Optim.optimize( f, g!, lower, upper, posterior, Optim.Fminbox( inner_optimizer ) )
   end   
@@ -276,7 +275,7 @@ include( "lossFunctions.jl" )
         inRow                   = ( ( i - 1 ) * siblings ) + row;
         resObject               = δOptimizationMSERegularized( posterior, predMat, T, parameterDF[row,:nrRuns], parameterDF[row,:α], parameterDF[row,:β], parameterDF[row,:Entropy] );
         pRefinedExt             = Optim.minimizer( resObject );
-        performance             = mean( MSE.( predMat * pRefinedExt, T ) );
+        performance             = mean( lossFunctions.MSE.( predMat * pRefinedExt, T ) );
         resultDF[inRow,:]        .= ( parameterDF[row,:nrRuns], parameterDF[row,:α], parameterDF[row,:β], parameterDF[row,:Entropy], performance );
         push!( pRefinedExt, entropy( pRefinedExt ), performance );
         parameterEvalDf[inRow,:] .= pRefinedExt;
@@ -337,7 +336,7 @@ include( "lossFunctions.jl" )
         inRow                   = ( ( i - 1 ) * siblings ) + row;
         resObject               = δOptimizationHingeRegularized( posterior, predMat, T, parameterDF[row,:nrRuns], parameterDF[row,:α], parameterDF[row,:β], parameterDF[row,:Entropy] );
         pRefinedExt             = Optim.minimizer( resObject );
-        performance             = mean( hingeLoss.( predMat * pRefinedExt, T ) );
+        performance             = mean( lossFunctions.hingeLoss.( predMat * pRefinedExt, T ) );
         resultDF[inRow,:]        .= ( parameterDF[row,:nrRuns], parameterDF[row,:α], parameterDF[row,:β], parameterDF[row,:Entropy], performance );
         push!( pRefinedExt, entropy( pRefinedExt ), performance );
         parameterEvalDf[inRow,:] .= pRefinedExt;

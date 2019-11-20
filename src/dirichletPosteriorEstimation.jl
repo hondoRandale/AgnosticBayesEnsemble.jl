@@ -1,4 +1,4 @@
-include( "argminProb.jl" )
+##include( "argminProb.jl" )
 include( "lossFunctions.jl" )
 
 using Distributions
@@ -101,7 +101,7 @@ end
       KSample     = rand( KDirDist );
       q           = ( θSample .* αSample ) .+ ( ( 1 - θSample ) * KSample );
       r           = G * q;
-      label       = argminProb( r );
+      label       = argminUniProb.argminProb( r );
       res[label] += 1.0;
     end
     return  res ./ nrRuns; 
@@ -148,7 +148,7 @@ end
       KSample     = rand( KDirDist );
       q           = ( θSample .* αSample ) .+ ( ( 1 - θSample ) * KSample );
       r           = G * q;
-      label       = argminProb( r );
+      label       = argminUniProb.argminProb( r );
       res[label] += 1.0;
     end
     return  res ./ nrRuns; 
@@ -194,7 +194,7 @@ end
       end
       q           = αSample .+ KSample;
       r           = G * q;
-      argminProb( r, labels );
+      argminUniProb.argminProb( r, labels );
       for pos in labels
         res[pos] += 1.0;
       end

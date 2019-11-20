@@ -1,4 +1,5 @@
-
+module lossFunctions
+  export hingeLoss, MSE, zeroOneLoss
   """
   ## @param:  y  Float64 - prediction
   ## @param:  t  Float64 - ground truth label
@@ -67,3 +68,4 @@
   function zeroOneLoss( Y::Vector{Float64}, T::Vector{Float64} )
     return zeroOneLoss.( Y, T );
   end
+end

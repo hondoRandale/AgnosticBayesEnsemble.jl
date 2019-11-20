@@ -1,4 +1,4 @@
-  include( "argminProb.jl" )
+  ##include( "argminProb.jl" )
   using Distributions
   using ProgressMeter
 
@@ -40,7 +40,7 @@
       ## sample ϵ from univariate chi-squared
       ϵ           = rand( chiSquaredDist );
       r           =  r_m .+ z * sqrt( v_ / ϵ ); 
-      label       = argminProb( r );
+      label       = argminUniProb.argminProb( r );
       res[label] += 1;
     end
     return  res ./ nrRuns;

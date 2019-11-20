@@ -2,7 +2,6 @@
 include( "testingUtils.jl" )
 include( "../src/bootstrapPosteriorEstimation.jl" )
 include( "../src/directSolution.jl" )
-include( "../src/lossFunctions.jl" )
 using DataFrames
 
 println( "running direct solution unit tests" );
@@ -23,20 +22,20 @@ yDirectMSE   = predMatEval * pDirectMSE;
 yDirectHinge = predMatEval * pDirectHinge;
 yUni         = predMatEval * pUni;
 
-performanceBayes       = mean( MSE( yBayes, tEval ) ); 
-performanceDirectMSE   = mean( MSE( yDirectMSE, tEval ) );
-performanceDirectHinge = mean( MSE( yDirectHinge, tEval ) );
-performanceUni         = mean( MSE( yUni, tEval ) );
+performanceBayes       = mean( lossFunctions.MSE( yBayes, tEval ) ); 
+performanceDirectMSE   = mean( lossFunctions.MSE( yDirectMSE, tEval ) );
+performanceDirectHinge = mean( lossFunctions.MSE( yDirectHinge, tEval ) );
+performanceUni         = mean( lossFunctions.MSE( yUni, tEval ) );
 
 #== test MSE optimization ==#
 @test performanceBayes > performanceDirectMSE
 @test performanceDirectHinge > performanceDirectMSE
 @test performanceUni > performanceDirectMSE
 
-performanceBayes       = mean( hingeLoss( yBayes, tEval ) ); 
-performanceDirectMSE   = mean( hingeLoss( yDirectMSE, tEval ) );
-performanceDirectHinge = mean( hingeLoss( yDirectHinge, tEval ) ); 
-performanceUni         = mean( hingeLoss( yUni, tEval ) ); 
+performanceBayes       = mean( lossFunctions.hingeLoss( yBayes, tEval ) ); 
+performanceDirectMSE   = mean( lossFunctions.hingeLoss( yDirectMSE, tEval ) );
+performanceDirectHinge = mean( lossFunctions.hingeLoss( yDirectHinge, tEval ) ); 
+performanceUni         = mean( lossFunctions.hingeLoss( yUni, tEval ) ); 
 
 #== test hingeLoss optimization ==#
 @test performanceBayes > performanceDirectHinge

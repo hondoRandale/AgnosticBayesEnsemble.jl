@@ -1,4 +1,4 @@
-include( "argminProb.jl" )
+##import( "argminProb.jl" )
 using ProgressMeter
 using StaticArrays
 
@@ -15,7 +15,7 @@ using StaticArrays
     res      = zeros( Int64, width );
     @showprogress 1 "Computing..." for i in 1:1:nrRuns
       samplingIndexCache = rand( 1:size( errMat, 1 ), samplingBatchSize ) ;
-      label              = argminProb( mean( errMat[samplingIndexCache,:], dims=1 )[1,:] );
+      label              = argminUniProb.argminProb( mean( errMat[samplingIndexCache,:], dims=1 )[1,:] );
       res[label]        += 1; 
     end
     return  res ./ nrRuns; 
