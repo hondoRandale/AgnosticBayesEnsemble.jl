@@ -1,4 +1,3 @@
-##include( "argminProb.jl" )
 include( "lossFunctions.jl" )
 
 using Distributions
@@ -6,33 +5,6 @@ using LinearAlgebra
 using ProgressMeter
 using Match
 
-function objFunctionASub( p::Vector{Float64}; predMat::Matrix{Float64}, y::Vector{Float64} )
-  return 1.0 / ( ( sum( round.( Int64, predMat * p ) .== round.( Int64, y ) ) + 1e-8 ) / ( size( y, 1 ) ) );
-end
-
-function objectiveA( α::Float64, predMat::Matrix{Float64}, nrRuns::Int64, t::Vector{Float64} )
-  errMat      = ( repeat(  Float64.( t ),outer = [1,size(predMat,2)] ) .- predMat ).^2;
-  posterior   = dirichletPosteriorEstimation( errMat, nrRuns, α );
-  yPrediction = predMat * posterior;
-  return hingeLoss( yPrediction, t );
-end
-
-function gradient!( storage, x, predMat::Matrix{Float64}, t::Vector{Float64} )
-  storage .= 2.0 * mean( (  predMat * x - t ) .* predMat, dims=1 )[1,:];
-end
-
-function metaParamSearchDirichletOptv2( initial_x::Vector{Float64}, predMat::Matrix{Float64}, nrRuns::Int64, t::Vector{Float64} )
-  lowerBound = 1e-10;
-  upperBound = 128.0;
-  function f( α::Float64 )
-    return objectiveA( α, predMat, nrRuns, t );
-  end 
-  function g!( storage, x )
-    return gradient!( storage, x, predMat, t );
-  end 
-  od = OnceDifferentiable( f, g!, initial_x );
-  return Optim.minimizer( optimize( od, initial_x, lowerBound, upperBound, Fminbox{GradientDescent}() ) );
-end
   """
       tobin( num::Int64 )
 
