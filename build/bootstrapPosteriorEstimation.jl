@@ -8,12 +8,11 @@ using StaticArrays
 
 
       compute posterior p( h* = h | S ).
-      #Arguments
-      - `errMat::Matrix{Float64}}`: each column is the prediction error of one hypothesis.
-      - `samplingBatchSize::Int64`: sample size per main iteration.
-      - `nrRuns::Int64`:            number of passes over predictions.
-      #Return
-      - `Vector{Float64}`:          Distribution p( h* = h | S ).
+  ## @param:  errMat         Matrix           - each column is prediction of one hypothesis
+  ## @param:  samplingFactor Float64          - relative samples taken per iteration 
+  ## @param:  nrRuns         Int64            - number of iterations over entire set
+  ## @brief:  compute posterior p( h* = h | S )
+  ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
   """
   function bootstrapPosteriorEstimation( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
     len      = size( errMat, 1 );
@@ -32,16 +31,15 @@ using StaticArrays
 
 
 
+
       compute posterior p( h* = h | S ).
-      #Arguments
-      - `errMat::Matrix{Float64}}`: each column is the prediction error of one hypothesis.
-      - `samplingBatchSize::Int64`: sample size per main iteration.
-      - `nrRuns::Int64`:            number of passes over predictions.
-      - `p::Vector{Float64}`:       resulting posterior p( h* = h | S ).
-      #Return
-      - `nothing`:                  nothing. 
+  ## @param:  errMat         Matrix           - each column is prediction of one hypothesis
+  ## @param:  samplingFactor Float64          - relative samples taken per iteration 
+  ## @param:  nrRuns         Int64            - number of iterations over entire set
+  ## @brief:  compute posterior p( h* = h | S )
+  ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
   """
-  function bootstrapPosteriorEstimation!( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64, p::Vector{Float64} )
+  function bootstrapPosteriorEstimation!( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64, p::Array{Float64} )
     pB = bootstrapPosteriorEstimation( Matrix( errMat ), samplingBatchSize, nrRuns );
     for (i,val) in enumerate( pB )
       p[i] = val;
@@ -54,12 +52,12 @@ using StaticArrays
 
 
       compute posterior p( h* = h | S ).
-      #Arguments
-      - `errMat::Matrix{Float64}`:  each column is the prediction error of one hypothesis.
-      - `samplingBatchSize::Int64`: label vector.
-      - `nrRuns::Int64`:            number of passes over predictions.
-      #Return
-      - `Vector{Float64}`:          posterior p( h* = h | S ).
+      
+  ## @param:  errMat         Matrix           - each column is prediction of one hypothesis
+  ## @param:  samplingFactor Float64          - relative samples taken per iteration 
+  ## @param:  nrRuns         Int64            - number of iterations over entire set
+  ## @brief:  compute posterior p( h* = h | S )
+  ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
   """
   function bootstrapPosteriorEstimationP( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
     tasks = Vector{Task}( undef, Threads.nthreads() );
