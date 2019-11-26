@@ -1,14 +1,20 @@
 module AgnosticBayesEnsemble
   using Optim
   export TDistPosteriorEstimation, GMatrix, 
-         dirichletPosteriorEstimation, metaParamSearchDirichletOptv2, 
+         dirichletPosteriorEstimation, 
          dirichletPosteriorEstimationV2, dirichletPosteriorEstimation!,
-         metaParamSearchValidationDirichlet, dirichletPosteriorEstimationPv1,
+         metaParamSearchValidationDirichlet, 
          bootstrapPosteriorEstimation, bootstrapPosteriorEstimation!,
-         bootstrapPosteriorEstimationP,
+         bootstrapPosteriorEstimationP, 
          bootstrapPosteriorCorEstimation,
          TDistPosteriorEstimation, TDistPosteriorEstimationReference,
-         predictEnsemble
+         predictEnsemble,
+         directOptimNaiveMSE, directOptimHinge,
+         posteriorLinearBasis, toHopfieldEncoding!,
+         δOptimizationHinge, δOptimizationHingeRegularized,
+         δOptimizationMSE, δOptimizationMSERegularized,
+         δTuneMSEMeta, δTuneHingeMeta
+
   include( "argminProb.jl" )       
   include( "bootstrapPosteriorCorEstimation.jl" )
   include( "dirichletPosteriorEstimation.jl" )
@@ -17,13 +23,20 @@ module AgnosticBayesEnsemble
   include( "TDistPosteriorEstimation.jl" )
   include( "directSolution.jl" )
   
+  """ 
+      predictEnsemble( predictions::Matrix{Float64}, weights::Vector{Float64} )
+      
+
+
+
+      perform bayesian ensemble prediction.
+      #Arguments
+      - `predictions::Matrix{Float64}`: each column is the prediction of one hypothesis.
+      - `weights::Vector{Float64}`:     mixing weights.
+      #Return
+      - `Vector{Float64}`:              prediction y.
   """
-  ## @param:  predictions    Matrix           - each column is prediction of one hypothesis
-  ## @param:  weights        Array{Float64,1} - posterior p( h* = h | S )
-  ## @brief:  perform bayesian ensemble prediction
-  ## @return: Array{Float64,1} ensemble predicted values
-  """
-  function predictEnsemble( predictions::Matrix{Float64}, weights::Array{Float64,1} )
+  function predictEnsemble( predictions::Matrix{Float64}, weights::Vector{Float64} )
     res = zeros( Float64, size( predictions )[1] );
     for (i,col) in enumerate( eachcol( predictions ) )
       res .+= ( weights[i] .* col );

@@ -24,11 +24,18 @@ using Statistics
   end
 
   """
-  @param:  predMat   -  Matrix{Float64}  - each column represents predictions of one model
-  @param:  t         -  Matrix{Float64}  - label vector
-  @param:  p         -  Vector{Float64}  - hypothesis mixing factors
-  @brief:  fine tune solution p using MSE error function
-  @return: improved solution Vector{Float64} 
+      directOptimNaiveMSE( predMat::Matrix{Float64}, t::Vector{Float64}, p::Vector{Float64} )
+
+
+
+
+      compute refined solution _for_ mixing parameter p.
+      #Arguments
+      - `predMat::Matrix{Float64}`: each column is the prediction _of_ one hypothesis.
+      - `t::Vector{Float64}`:       label vector.
+      - `p::Vector{Float64}`:       initial solution for mixing coefficients.
+      #Return
+      - `Vector{Float64}`:          improved initial solution. 
   """
   function directOptimNaiveMSE( predMat::Matrix{Float64}, t::Vector{Float64}, p::Vector{Float64} )
     @assert size( t, 1 ) == size( t, 1 )  
@@ -40,11 +47,18 @@ using Statistics
   end
 
   """
-  @param:  predMat   -  Matrix{Float64}  - each column represents predictions of one model
-  @param:  t         -  Matrix{Float64}  - label vector
-  @param:  p         -  Vector{Float64}  - hypothesis mixing factors
-  @brief:  fine tune solution p using hinge-Loss error function
-  @return: improved solution Vector{Float64} 
+      directOptimHinge( predMat::Matrix{Float64}, t::Vector{Float64}, p::Vector{Float64} )
+
+
+
+
+      compute refined solution _for_ mixing parameter p.
+      #Arguments
+      - `predMat::Matrix{Float64}`: each column is the prediction _of_ one hypothesis.
+      - `t::Vector{Float64}`:       label vector.
+      - `p::Vector{Float64}`:       initial solution for mixing coefficients.
+      #Return
+      - `Vector{Float64}`:          improved initial solution. 
   """
   function directOptimHinge( predMat::Matrix{Float64}, t::Vector{Float64}, p::Vector{Float64} )
     @assert size( t, 1 ) == size( t, 1 ) 

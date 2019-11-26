@@ -2,19 +2,19 @@ using ProgressMeter
 using LinearAlgebra
 
   """
-      bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, y::Array{Float64,1}, samplingBatchSize::Int64, nrRuns::Int64 )
+      bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, t::Vector{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
 
 
 
 
       compute posterior p( h* = h | S ).
       #Arguments
-      - `predictions::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+      - `predictions::Matrix{Float64}`: each column is the prediction of one hypothesis.
       - `t::Vector{Float64}`:           label vector.
       - `samplingBatchSize::Int64`:     sample size per main iteration.
       - `nrRuns::Int64`:                number of main  iterations.
       #Return
-      - `Float64`:            Best found meta parameter α. 
+      - `Vector{Float64}`:              posterior p( h* = h | S ). 
   """
   function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, t::Vector{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
     len      = size( predictions )[1];
@@ -31,19 +31,19 @@ using LinearAlgebra
   
 
   """
-      bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, y::Array{Float64,1}, samplingBatchSize::Int64, nrRuns::Int64 )
+      bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, T::Matrix{Float64}, samplingFactor::Float64, nrRuns::Int64 )
 
 
 
 
       compute posterior p( h* = h | S ).
       #Arguments
-      - `predictions::Matrix{Float64}`: each column is the prediction error of one hypothesis.
-      - `T::Vector{Float64}`:           label matrix.
+      - `predictions::Matrix{Float64}`: each column is the prediction of one hypothesis.
+      - `T::Matrix{Float64}`:           label matrix.
       - `samplingBatchSize::Int64`:     sample size per main iteration.
       - `nrRuns::Int64`:                number of main  iterations.
       #Return
-      - `Float64`:            Best found meta parameter α.  
+      - `Vector{Float64}`:              posterior p( h* = h | S ). 
   """
   function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, T::Matrix{Float64}, samplingFactor::Float64, nrRuns::Int64 )
     len      = size( predictions )[1];

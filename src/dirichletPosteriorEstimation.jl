@@ -42,14 +42,15 @@ using Match
   end
 
   """
-      dirichletPosteriorEstimation( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_ )
+      dirichletPosteriorEstimation( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
 
 
 
 
       compute posterior p( h* = h | S ).
       # Arguments
-      - `errMat::Matrix{Float64}`: each column is the prediction of one hypothesis.
+      - `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+      - `G::Matrix{Float64}`:      transformation matrix G.
       - `nrRuns::Int64`:           number of sampling runs.
       - `α_::Float64`:             scalar prior parameter.
       - `sampleSize::Int64`:       number of samples per run.
@@ -95,6 +96,22 @@ using Match
     return  res ./ nrRuns; 
   end
 
+  """
+      dirichletPosteriorEstimationV2( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_::Float64, sampleSize::Int64 )
+
+
+
+
+      compute posterior p( h* = h | S ), alternative version for improved performance.
+      # Arguments
+      - `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+      - `G::Matrix{Float64}`:      transformation matrix G.
+      - `nrRuns::Int64`:           number of sampling runs.
+      - `α_::Float64`:             scalar prior parameter.
+      - `sampleSize::Int64`:       number of samples per run.
+      # Return
+      - `Vector{Float64}`:         posterior distribution posterior p( h* = h | S ).
+  """
   function dirichletPosteriorEstimationV2( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_::Float64, sampleSize::Int64 )
     ## number of prediction models to combine
     m = size( errMat, 1 );
@@ -145,20 +162,17 @@ using Match
 
   """
       dirichletPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
-      
+
 
 
 
       compute posterior p( h* = h | S ).
-      # Arguments
-      - `errMat::Matrix{Float64}`: each column is the prediction of one hypothesis.
-      - `nrRuns::Int64`:           number of sampling runs.
+      #Arguments
+      - `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+      - `nrRuns::Int64`:           number of main  iterations.
       - `α_::Float64`:             scalar prior parameter.
-      - `sampleSize::Int64`:       number of samples per run.
-      # Return
-      - `Vector{Float64}`:         posterior distribution
-
-      
+      #Return
+      - `Vector{Float64}`:         posterior p( h* = h | S ). 
   """
   function dirichletPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
     d = size( errMat )[2];
@@ -168,14 +182,18 @@ using Match
 
   """
       dirichletPosteriorEstimationV2( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64, sampleSize::Int64 )
-      compute posterior p( h* = h | S ).
+
+
+
+
+      compute posterior p( h* = h | S ), alternative version for improved performance.
       # Arguments
       - `errMat::Matrix{Float64}`: each column is the prediction of one hypothesis.
       - `nrRuns::Int64`:           number of sampling runs.
       - `α_::Float64`:             scalar prior parameter.
       - `sampleSize::Int64`:       number of samples per run.
       # Return
-      - `Vector{Float64}`:         posterior distribution
+      - `Vector{Float64}`:         posterior distribution p( h* = h | S ).
   """
   function dirichletPosteriorEstimationV2( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64, sampleSize::Int64 )
     d = size( errMat )[2];
@@ -196,33 +214,13 @@ using Match
       - `α_::Float64`:             meta parameter value.
       - `p::Vector{Float64}`:      return value posterior p( h* = h | S ).
       #Return
-      - `Float64`:            Best found meta parameter α. 
+      - `nothing`:                 nothing. 
   """
   function dirichletPosteriorEstimation!( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64, p::Vector{Float64} )
     pRes = dirichletPosteriorEstimation( errMat, nrRuns, α_ );
     for (i,val) in enumerate( pRes )
       p[i] = val;
     end
-  end
-
-  function dirichletPosteriorEstimationPv1( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
-    tasks = Vector{Task}( undef, Threads.nthreads() );
-    width = size( errMat, 2 );
-    res   = Vector{ Vector{Float64} }( undef, Threads.nthreads() );
-    p     = zeros( Float64, width );
-    for i=1:1:Threads.nthreads()
-      res[i]   = zeros( Float64, width );
-      a()      = dirichletPosteriorEstimation!( errMat, nrRuns, α_, res[i] );
-      tasks[i] = Task( a );
-    end
-    for i in 1:1:Threads.nthreads()
-      schedule( tasks[i] );
-      yield();
-    end
-    for vec in res
-      p .+= vec;
-    end
-    return p ./ Threads.nthreads();
   end
   
   """
@@ -242,7 +240,7 @@ using Match
       - `holdout::Float64`:   percentage used in holdout.
       - `lossFunc`:           error function handle.
       #Return
-      - `Float64`:            Best found meta parameter α. 
+      - `Vector{Float64} x2`: α_sequence, performance_sequence. 
   """
   function metaParamSearchValidationDirichlet( Y::Matrix{Float64}, t::Vector{Float64}, nrRuns::Int64, minVal::Float64, maxVal::Float64, nSteps::Int64, holdout::Float64, lossFunc )
     @assert nrRuns > 0

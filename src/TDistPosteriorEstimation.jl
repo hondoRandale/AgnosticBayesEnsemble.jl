@@ -15,10 +15,12 @@
 
 
 
-  ## @param:  predictions    Matrix           - each column is prediction of one hypothesis 
-  ## @param:  nrRuns         Int64            - number of sampling runs
-  ## @brief:  compute posterior p( h* = h | S )
-  ## @return: posterior      Float{Float64,1} - Distribution p( h* = h | S )
+      compute posterior p( h* = h | S ).
+      #Arguments
+      - `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+      - `nrRuns::Int64`:                number of main  iterations.
+      #Return
+      - `Vector{Float64}`:              posterior p( h* = h | S ). 
   """
   function TDistPosteriorEstimationReference( errMat::Matrix{Float64}, nrRuns::Int64 )
     m   = size( errMat )[1];
@@ -56,14 +58,16 @@
 
 
 
-  ## @param:  predictions Matrix  - each column is prediction of one hypothesis 
-  ## @param:  nrRuns      Int64   - number of sampling runs
-  ## @param:  κ_0         Float64 - regularization param
-  ## @param:  v_0         Float64 - regularization param
-  ## @param:  α           Float64 - regularization param
-  ## @param:  β           Float64 - regularization param
-  ## @brief:  compute posterior p( h* = h | S )
-  ## @return: posterior   Float{Float64,1} - Distribution p( h* = h | S )
+      compute posterior p( h* = h | S ).
+      #Arguments
+      - `errMat::Matrix{Float64}`:                   each column is the prediction error of one hypothesis.
+      - `nrRuns::Int64`:                             number of main  iterations.
+      - `κ_0::Float64=1.0`:                          regularization param.
+      - `v_0::Float64=Float64( size( errMat, 2 ) )`: regularization param.
+      - `α::Float64=0.5`:                            regularization param.
+      - `β::Float64=0.25`:                           regularization param.
+      #Return
+      - `Vector{Float64}`:                           posterior p( h* = h | S ). 
   """
   function TDistPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64; κ_0::Float64=1.0, v_0::Float64=Float64( size( errMat, 2 ) ), α::Float64=0.5, β::Float64=0.25 )
     m   = size( errMat )[1];
