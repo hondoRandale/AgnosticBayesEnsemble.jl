@@ -29,62 +29,6 @@ The Interface was designed to be easy to use, therefore all parameters needed by
 Or alternatively e_1, e_2, e_3, …, e_k the error between predicted and real labels and ground truth T.
 Some of the methods need additional (prior-) parameters, however this simple basic structure is consistent along all implemented ensemble methods in this package.
 
-
-
- `*## @param: errMat         Matrix  - each column is prediction of one hypothesis*`
-
- `*## @param: samplingFactor Float64 - relative samples taken per iteration*` 
-
- `*## @param: nrRuns         Int64   - number of iterations over entire set*`
-
- `*## @brief: compute posterior p( h\* = h | S )*`
-
- `*## @return: posterior Float{Float64,1} - Distribution p( h\* = h | S )*`
-
- `function bootstrapPosteriorEstimation( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )`
-
-___
-
- `*## @param: errMat Matrix  - each column is prediction of one hypothesis*` 
-
- `*## @param: nrRuns Int64   - number of sampling runs*`
-
- `*## @param: α_     Float64 - scalar prior parameter*`
-
- `*## @brief: compute posterior p( h\* = h | S )*`
-
- `*## @return: posterior   Float{Float64,1} - Distribution p( h\* = h | S )*`
-
- `function dirichletPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64 )`
-
-___
-
-`## @param: predictions     Matrix{Float64}  - each column is prediction of one hypothesis`
-
-`*## @param: y              Array{Float64,1} - ground truth label vector*`
-
-`*## @param: samplingFactor Float64          - relative samples taken per iteration*` 
-
-`*## @param: nrRuns         Int64            - number of iterations over entire set*`
-
-`*## @brief: compute posterior p( h\* = h | S )*`
-
-`*## @return: posterior   Float{Float64,1} - Distribution p( h\* = h | S )*`
-
-`function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, y::Array{Float64,1}, samplingBatchSize::Int64, nrRuns::Int64 )`
-
-___
-
- `*## @param: predictions Matrix - each column is prediction of one hypothesis*` 
-
- `*## @param: nrRuns      Int64  - number of sampling runs*`
-
- `*## @brief: compute posterior p( h\* = h | S )*`
-
- `*## @return: posterior   Float{Float64,1} - Distribution p( h\* = h | S )*`
-
- `function TDistPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64 )`
-
 ___
 
 **_Examples_**
