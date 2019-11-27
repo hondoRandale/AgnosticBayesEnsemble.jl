@@ -22,4 +22,5 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 Documenter = "0.24"
+Optim = "0.19"
 ProgressMeter = "1.2"
