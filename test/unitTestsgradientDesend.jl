@@ -73,7 +73,7 @@ lossUni         = mean( lossFunctions.hingeLoss( AgnosticBayesEnsemble.predictEn
 #** Expirement 2: start with linearBaseSolution normalized to distribution, hingeLoss **#
 baseSolution              = posteriorLinearBasis( YHopfield, tHopfield );
 γ                         = sum( baseSolution );
-posteriorStart            = baseSolution ./ γ;
+posteriorStart            = baseSolution ./ sum( baseSolution );
 YHopfield                *= γ;
 lossUni                   = mean( lossFunctions.hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorUni ), tHopfield ) );
 lossLinearBasisNormalized = mean( lossFunctions.hingeLoss( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posteriorStart ), tHopfield ) );
