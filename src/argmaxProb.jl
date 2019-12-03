@@ -17,7 +17,7 @@ module argmaxUniProb
   function argmaxProb( r::Matrix{Float64} )
     index = Vector{Int64}( undef, size( r, 1 ) );
     for i in size( index, 1 )
-      index[i] = argmaxProb( r[:,i] );
+      index[i] = argmaxProb( r[i,:] );
     end
     return index; 
   end
