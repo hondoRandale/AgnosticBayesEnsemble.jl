@@ -8,9 +8,16 @@ using Statistics
 using ProgressMeter
 
   """
-  ## @param:  d  Int64  number of outcomes
-  ## @brief:  draw a random distributiob over d outputs
-  ## @return: Vector{Float64} p with sum(p) == 1.0
+      randPosterior( d::Int64 )
+
+
+
+
+      draw a random distribution over d outputs.
+        #Arguments
+          - `d::Int64`:        number of hypothesis.    
+        #Return
+          - `Vector{Float64}`: mixing distribution.
   """
   function randPosterior( d::Int64 )
     p = rand( collect(0.0:1e-3:10000.0), d );
@@ -18,20 +25,33 @@ using ProgressMeter
   end
 
   """
-  ## @param:  Y  Matrix{Float64}
-  ## @param:  t  Vector{Float64}
-  ## @brief:  compute the rel. percantage each prediction represents the true function.
-  ## @return: Vector{Float64}
+      posteriorLinearBasis( Y::Matrix{Float64}, t::Vector{Float64} ) 
+
+
+
+      compute the rel. percantage each prediction represents the true function.
+      #Arguments
+          - `Y::Matrix{Float64}`:  each column is the prediction of one hypothesis. 
+          - `t::Vector{Float64}`:  ground truth labels.   
+      #Return
+          - `Vector{Float64}`:     mixing distribution.
   """
   function posteriorLinearBasis( Y::Matrix{Float64}, t::Vector{Float64} ) 
     return ( transpose( Y ) * t ) ./ ( transpose(t) * t )
   end
 
   """
-  ## @param:  OutputVector - YOut::Vector{Float64} hopfield encoded label vector and return value
-  ## @param:  InputVector  - YIn::Vector{Float64}  {0,1} encoded binary label vector
-  ## @brief:  transform label encoding from {0,1} to {-1,1}
-  ## @return: nothing
+      toHopfieldEncoding!( YOut::Vector{Float64}, YIn::Vector{Float64} )
+
+
+
+      
+      transform label encoding from {0,1} to {-1,1}.
+      #Arguments
+      - `YOut::Vector{Float64}`: resulting {-1,1} encoded vector.  
+      - `YIn::Vector{Float64}`:  {0,1} encoded input label vector.    
+      #Return
+      - `nothing`:               nothing.
   """
   function toHopfieldEncoding!( YOut::Vector{Float64}, YIn::Vector{Float64} )
     index0 = YIn .== 0;
@@ -44,11 +64,19 @@ using ProgressMeter
     end
   end
 
+
   """
-  ## @param:  OutputMatrix - YOut::Matrix{Float64} hopfield encoded label vector and return value
-  ## @param:  InputMatrix  - YIn::Matrix{Float64}  {0,1} encoded binary label vector
-  ## @brief:  transform label encoding from {0,1} to {-1,1}
-  ## @return: nothing
+      toHopfieldEncoding!( YOut::Matrix{Float64}, YIn::Matrix{Float64} )
+
+
+
+
+      transform label encoding from {0,1} to {-1,1}.
+      #Arguments
+      - `YOut::Matrix{Float64}`: resulting {-1,1} encoded vector.  
+      - `YIn::Matrix{Float64}`:  {0,1} encoded input label vector.    
+      #Return
+      - `nothing`:               nothing.
   """
   function toHopfieldEncoding!( YOut::Matrix{Float64}, YIn::Matrix{Float64} )
     for row in 1:1:size( YIn, 1 )
@@ -61,12 +89,18 @@ using ProgressMeter
   end
 
   """
-  ## @param:  cache     Vector{Float64}  resulting gradient
-  ## @param:  posterior Vector{Float64}  starting solution
-  ## @param:  predMat   Matrix{Float64}  prediction Matrix -one column foreach prediction model-
-  ## @param:  T         Vector{Float64}  ground truth label vector
-  ## @brief:  compute gradient under hinge loss function
-  ## @return: nothing
+      gradientHinge!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64} )
+
+
+
+      compute gradient under hinge loss function
+      #Arguments
+      - `cache::Vector{Float64}`:     resulting gradient.  
+      - `posterior::Vector{Float64}`: starting solution.
+      - `predMat::Matrix{Float64}`:   prediction Matrix -one column foreach prediction model-.    
+      - `T::Vector{Float64}}`:        ground truth label vector.
+      #Return
+      - `nothing`:                    nothing.    
   """
   function gradientHinge!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64} )
     width  = size( predMat, 2 );
@@ -78,15 +112,22 @@ using ProgressMeter
   end
 
   """
-  ## @param:  cache     Vector{Float64}  resulting gradient
-  ## @param:  posterior Vector{Float64}  starting solution
-  ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
-  ## @param:  T         Vector{Float64}  ground truth label vector
-  ## @param:  α         Float64          regularization param 1
-  ## @param:  β         Float64          regularization param 2
-  ## @param:  entTarget Float64          regularization param 3
-  ## @brief:  compute gradient under hinge loss function regularized
-  ## @return: nothing
+      gradientHingeRegularized!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, α::Float64, β::Float64, entTarget::Float64 )    
+      
+
+
+
+      compute gradient under hinge loss function regularized.
+      #Arguments
+      - `cache::Vector{Float64}`:     resulting gradient.  
+      - `posterior::Vector{Float64}`: starting solution.
+      - `predMat::Matrix{Float64}`:   prediction Matrix -one column foreach prediction model-.    
+      - `T::Vector{Float64}}`:        ground truth label vector.
+      - `α::Float64`:                 regularization param 1.
+      - `β::Float64`:                 regularization param 2.
+      - `entTarget::Float64`:         regularization param 3.
+      #Return
+      - `nothing`:                    nothing.
   """
   function gradientHingeRegularized!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, α::Float64, β::Float64, entTarget::Float64 )
     width  = size( predMat, 2 );
@@ -100,12 +141,18 @@ using ProgressMeter
   end
 
   """
-  ## @param:  cache     Vector{Float64}  resulting gradient
-  ## @param:  posterior Vector{Float64}  starting solution
-  ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
-  ## @param:  T         Vector{Float64}  ground truth label vector
-  ## @brief:  compute gradient under MSE function
-  ## @return: nothing
+      gradientMSE!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64} )
+
+
+
+      compute gradient under MSE function.
+      #Arguments
+      - `cache::Vector{Float64}`:     resulting gradient.  
+      - `posterior::Vector{Float64}`: starting solution.
+      - `predMat::Matrix{Float64}`:   prediction Matrix -one column foreach prediction model-.    
+      - `T::Vector{Float64}}`:        ground truth label vector.
+      #Return
+      - `nothing`:                    nothing.
   """
   function gradientMSE!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64} )
     width  = size( predMat, 2 );
@@ -118,15 +165,22 @@ using ProgressMeter
   end
 
   """
-  ## @param:  cache     Vector{Float64}  resulting gradient
-  ## @param:  posterior Vector{Float64}  starting solution
-  ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
-  ## @param:  T         Vector{Float64}  ground truth label vector
-  ## @param:  α         Float64          regularization param 1
-  ## @param:  β         Float64          regularization param 2
-  ## @param:  entTarget Float64          regularization param 3
-  ## @brief:  compute gradient under hinge MSE function regularized
-  ## @return: nothing
+      gradientMSERegularized!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, α::Float64, β::Float64, entTarget::Float64 )
+  
+
+
+
+      compute gradient under hinge MSE function regularized.
+        #Arguments
+        - `cache::Vector{Float64}`:     resulting gradient.  
+        - `posterior::Vector{Float64}`: starting solution.
+        - `predMat::Matrix{Float64}`:   prediction Matrix -one column foreach prediction model-.    
+        - `T::Vector{Float64}}`:        ground truth label vector.
+        - `α::Float64`:                 regularization param 1.
+        - `β::Float64`:                 regularization param 2.
+        - `entTarget::Float64`:         regularization param 3.
+        #Return
+        - `nothing`:                    nothing.
   """
   function gradientMSERegularized!( cache::Vector{Float64}, posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, α::Float64, β::Float64, entTarget::Float64 )
     width  = size( predMat, 2 );
@@ -141,12 +195,19 @@ using ProgressMeter
   end
 
   """
-  ## @param: posterior Vector{Float64}  starting solution
-  ## @param: predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
-  ## @param: T         Vector{Float64}  ground truth label vector
-  ## @param: max_iter  Int64            max. number of gradient iterations
-  ## @brief: optmize initial solution posterior using gradient descend
-  ## @return:
+      δOptimizationHinge( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64 )
+
+
+
+
+      optimize initial solution posterior using gradient descend.
+      #Arguments
+      - `posterior::Vector{Float64}`:  starting solution. 
+      - `predMat::Matrix{Float64}`:    prediction Matrix - one column foreach prediction model -.
+      - `T::Vector{Float64}`:          ground truth label vector.
+      - `max_iter::Int64`:             max. number of gradient iterations.
+      #Return
+      - `optimization object`:         solved optimization problem.
   """
   function δOptimizationHinge( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64 )
     d               = size( predMat, 2 );  
@@ -163,15 +224,22 @@ using ProgressMeter
   end    
 
   """
-  ## @param:  posterior Vector{Float64}  starting solution
-  ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
-  ## @param:  T         Vector{Float64}  ground truth label vector
-  ## @param:  max_iter  Int64            max. number of gradient iterations
-  ## @param:  α         Float64          regularization param 1
-  ## @param:  β         Float64          regularization param 2
-  ## @param:  entTarget Float64          regularization param 3
-  ## @brief:
-  ## @return:
+      δOptimizationHingeRegularized( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64, α::Float64, β::Float64, entTarget::Float64 )
+  
+
+
+
+      optimize initial solution posterior using gradient descend.
+      #Arguments
+      - `posterior::Vector{Float64}`:  starting solution. 
+      - `predMat::Matrix{Float64}`:    prediction Matrix - one column foreach prediction model -.
+      - `T::Vector{Float64}`:          ground truth label vector.
+      - `max_iter::Int64`:             max. number of gradient iterations.
+      - `α::Float64`:                  regularization param 1.
+      - `β::Float64`:                  regularization param 2.
+      - `entTarget::Float64`:          regularization param 3.
+      #Return
+      - `optimization object`:         solved optimization problem.
   """
   function δOptimizationHingeRegularized( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64, α::Float64, β::Float64, entTarget::Float64 )
     d               = size( predMat, 2 );  
@@ -188,11 +256,18 @@ using ProgressMeter
   end
 
   """
-  ## @param:  posterior Vector{Float64}  starting solution
-  ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
-  ## @param:  T         Vector{Float64}  ground truth label vector
-  ## @param:  max_iter  Int64            max. number of gradient iterations
-  ## @return: 
+      δOptimizationMSE( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64 )
+
+
+
+      optimize initial solution posterior using gradient descend.
+      #Arguments
+      - `posterior::Vector{Float64}`:  starting solution. 
+      - `predMat::Matrix{Float64}`:    prediction Matrix - one column foreach prediction model -.
+      - `T::Vector{Float64}`:          ground truth label vector.
+      - `max_iter::Int64`:             max. number of gradient iterations.
+      #Return
+      - `optimization object`:         solved optimization problem.
   """
   function δOptimizationMSE( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64 )
     d               = size( predMat, 2 );  
@@ -210,15 +285,22 @@ using ProgressMeter
   end   
 
   """
-  ## @param:  posterior Vector{Float64}  starting solution
-  ## @param:  predMat   Matrix{Float64}  prediction Matrix - one column foreach prediction model -
-  ## @param:  T         Vector{Float64}  ground truth label vector
-  ## @param:  max_iter  Int64            max. number of gradient iterations
-  ## @param:  α         Float64          regularization param 1
-  ## @param:  β         Float64          regularization param 2
-  ## @param:  entTarget Float64          regularization param 3
-  ## @brief:  
-  ## @return: nothing
+      δOptimizationMSERegularized( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64, α::Float64, β::Float64, entTarget::Float64 )
+      
+
+
+
+      optimize initial solution posterior using gradient descend.
+      #Arguments
+      - `posterior::Vector{Float64}`:  starting solution. 
+      - `predMat::Matrix{Float64}`:    prediction Matrix - one column foreach prediction model -.
+      - `T::Vector{Float64}`:          ground truth label vector.
+      - `max_iter::Int64`:             max. number of gradient iterations.
+      - `α::Float64`:                  regularization param 1.
+      - `β::Float64`:                  regularization param 2.
+      - `entTarget::Float64`:          regularization param 3.
+      #Return
+      - `optimization object`:         solved optimization problem.
   """
   function δOptimizationMSERegularized( posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, max_iter::Int64, α::Float64, β::Float64, entTarget::Float64 )
     d               = size( predMat, 2 );  
@@ -235,17 +317,24 @@ using ProgressMeter
   end   
 
   """
-  ## @param:  posterior       Vector{Float64}        starting solution
-  ## @param:  predMat         Matrix{Float64}        prediction Matrix - one column foreach prediction model -
-  ## @param:  T               Vector{Float64}        ground truth label vector
-  ## @param:  nrRunsRange     Tuple{Float64,Float64} parameter range
-  ## @param:  αRange          Tuple{Float64,Float64} parameter range
-  ## @param:  βRange          Tuple{Float64,Float64} parameter range
-  ## @param:  relEntropyRange Tuple{Float64,Float64} parameter range
-  ## @param:  generations     Int64                  numbers of generations to spawn
-  ## @param:  siblings        Int64                  numbers of siblings per spawn
-  ## @brief:  search for best regularization params using Mean Squared Error
-  ## @return:
+      δTuneMSEMeta(;posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, nrRunsRange::Tuple{Float64,Float64}, αRange::Tuple{Float64,Float64}, βRange::Tuple{Float64,Float64}, relEntropyRange::Tuple{Float64,Float64}, generations::Int64, siblings::Int64 )
+
+
+
+      
+      search for best regularization params using Mean Squared Error.
+      #Arguments
+      - `posterior::Vector{Float64}`:              starting solution. 
+      - `predMat::Matrix{Float64}`:                prediction Matrix - one column foreach prediction model -.
+      - `T::Vector{Float64}`:                      ground truth label vector.
+      - `nrRunsRange::Tuple{Float64,Float64}`:     parameter range.
+      - `αRange::Tuple{Float64,Float64}`:          parameter range.
+      - `βRange::Tuple{Float64,Float64}`:          parameter range.
+      - `relEntropyRange::Tuple{Float64,Float64}`: parameter range.
+      - `generations::Int64`:                      numbers of generations to spawn.
+      - `siblings::Int64`:                         numbers of siblings per spawn.
+      #Return
+      - `Tuple{DataFrame,DataFrame}`:              dataframes containing parameters and associated performance.
   """
   function δTuneMSEMeta(;posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, nrRunsRange::Tuple{Float64,Float64}, αRange::Tuple{Float64,Float64}, βRange::Tuple{Float64,Float64}, relEntropyRange::Tuple{Float64,Float64}, generations::Int64, siblings::Int64 )
     nrPredRun       = Int64( 1e4 );
@@ -296,17 +385,24 @@ using ProgressMeter
   end  
   
   """
-  ## @param:  posterior       Vector{Float64}        starting solution
-  ## @param:  predMat         Matrix{Float64}        prediction Matrix - one column foreach prediction model -
-  ## @param:  T               Vector{Float64}        ground truth label vector
-  ## @param:  nrRunsRange     Tuple{Float64,Float64} parameter range
-  ## @param:  αRange          Tuple{Float64,Float64} parameter range
-  ## @param:  βRange          Tuple{Float64,Float64} parameter range
-  ## @param:  relEntropyRange Tuple{Float64,Float64} parameter range
-  ## @param:  generations     Int64                  numbers of generations to spawn
-  ## @param:  siblings        Int64                  numbers of siblings per spawn
-  ## @brief:  search for best regularization params using hingeLoss
-  ## @return: 
+      δTuneHingeMeta(;posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, nrRunsRange::Tuple{Float64,Float64}, αRange::Tuple{Float64,Float64}, βRange::Tuple{Float64,Float64}, relEntropyRange::Tuple{Float64,Float64}, generations::Int64, siblings::Int64 )
+
+
+
+
+      search for best regularization params using hingeLoss.
+      #Arguments
+        - `posterior::Vector{Float64}`:              starting solution. 
+        - `predMat::Matrix{Float64}`:                prediction Matrix - one column foreach prediction model -.
+        - `T::Vector{Float64}`:                      ground truth label vector.
+        - `nrRunsRange::Tuple{Float64,Float64}`:     parameter range.
+        - `αRange::Tuple{Float64,Float64}`:          parameter range.
+        - `βRange::Tuple{Float64,Float64}`:          parameter range.
+        - `relEntropyRange::Tuple{Float64,Float64}`: parameter range.
+        - `generations::Int64`:                      numbers of generations to spawn.
+        - `siblings::Int64`:                         numbers of siblings per spawn.
+      #Return
+        - `Tuple{DataFrame,DataFrame}`:              dataframes containing parameters and associated performance.   
   """
   function δTuneHingeMeta(;posterior::Vector{Float64}, predMat::Matrix{Float64}, T::Vector{Float64}, nrRunsRange::Tuple{Float64,Float64}, αRange::Tuple{Float64,Float64}, βRange::Tuple{Float64,Float64}, relEntropyRange::Tuple{Float64,Float64}, generations::Int64, siblings::Int64 )
     nrPredRun       = Int64( 1e5 );
