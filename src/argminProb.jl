@@ -38,7 +38,7 @@ module argminUniProb
   function argminProb!( r::Matrix{Float64}, v::Vector{Int64} )
     @assert size( v,1 ) == size( r, 2 );
     for i=1:size( v, 1 )
-      v[i] = argminProb( r[:,i] );
+      v[i] = argminProb( r[i,:] );
     end
   end
 
