@@ -2,22 +2,36 @@ using Optim
 using Statistics
 
   """
-  @param:  p        -  Vector{Float64}  - hypothesis mixing factors
-  @param:  predMat  -  Matrix{Float64}  - each column represents predictions of one model
-  @param:  t        -  Vector{Float64}  - label vector
-  @brief:  evaluate MeanSquaredError under given params
-  @return: MSE      - Float64
+      objFunctionMSE( p::Vector{Float64}; predMat::Matrix{Float64}, t::Vector{Float64} )
+
+
+
+
+      evaluate MeanSquaredError under given params.
+      #Arguments
+      - `p::Vector{Float64}`:       initial solution.
+      - `predMat::Matrix{Float64}`: each column represents predictions of one model.
+      - `t::Vector{Float64}`:       ground truth labels.
+      #Return
+      - `Float64`:                  MeanSquaredError. 
   """
   function objFunctionMSE( p::Vector{Float64}; predMat::Matrix{Float64}, t::Vector{Float64} )
     return mean( lossFunctions.MSE( predMat * p, t ) );
   end
 
   """
-  @param:  p         -  Vector{Float64}  - hypothesis mixing factors
-  @param:  predMat   -  Matrix{Float64}  - each column represents predictions of one model
-  @param:  t         -  Vector{Float64}  - label vector
-  @brief:  evaluate Hinge Error under given params
-  @return: hingeLoss - Float64
+      objFunctionHinge( p::Vector{Float64}; predMat::Matrix{Float64}, t::Vector{Float64} )
+
+
+
+
+      evaluate MeanSquaredError under given params.
+      #Arguments
+      - `p::Vector{Float64}`:       initial solution.
+      - `predMat::Matrix{Float64}`: each column represents predictions of one model.
+      - `t::Vector{Float64}`:       ground truth labels.
+      #Return
+      - `Float64`:                  hingeLoss. 
   """
   function objFunctionHinge( p::Vector{Float64}; predMat::Matrix{Float64}, t::Vector{Float64} )
     return mean( lossFunctions.hingeLoss( predMat * p, t ) );
