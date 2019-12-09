@@ -1,35 +1,51 @@
 #Agnostic Bayes Ensemble Documentation 
- 
+
 __Overview__
 
-This package has been developed to facilitate increased predictive performance, by combining raw base models in an agnostic fashion, 
-i.e. the methods don’t use any assumption regarding the used raw models. Furthermore, we specifically implemented ensemble algorithms 
-that can deal with arbitrary loss function and with regression and classification problems, this holds true for all, except for the
- dirichletPosteriorEstimation algorithm, which is limited to classification problems.
- 
+I have to thank my employer Auticon Berlin for letting me develop this package in my working time. Agnostic Bayes Ensemble is thought to be basis technology, that will be refined over time, furthermore it forms one pillar of a upcoming machine learning framework, which is supposed to consist of three broad branches: 
+
+- cleaning and transformation of datasets.
+
+- ensemble algorithms.
+
+- general applicable meta parameter learning.
+
+    
+
+There are minimal requirements regarding the installation and usage of this package. Right now, the only prerequisite is running on a machine with Julia 1.X installed. However in the upcoming releases GPU support in form of CUDA will be integrated, from there on out, CUDA-DEV-Kit will become a prerequisite.  
+
+This package has been developed to facilitate increased predictive performance, by combining raw base models in an agnostic fashion, i.e. the methods don’t use any assumption regarding the used raw models. Furthermore, we specifically implemented ensemble algorithms that can deal with arbitrary loss function and with regression and classification problems, this holds true for all, except for the dirichletPosterior estimation algorithm, which is limited to classification problems.
+
+The algorithms bootstrapPosteriorEstimation, bootstrapPosteriorCorEstimation, dirichletPosteriorEstimation, TDistPosteriorEstimation infer an actual posterior distribution.
+
+The algorithms  δOptimizationMSE ,   δOptimizationHinge ,  δOptimizationHingeRegularized,  δOptimizationMSERegularized do not, these algorithms are inferring mixing coefficients not required to be true probability distributuions . 
+
  **Hint**: In most cases it is advisable to _deactivate_ Hyperthreading for best performance.
 However, in some rare cases – depending on the (hardware) platform the package runs on- you
 will get the best performance with Hyperthreading enabled, to be sure, it is best practice to
 measure the performance with and without Hyperthreading.
 
 ## generic methods 
+
+make a prediction given trained mixing coefficients and input Matrix.
+
 ```@docs
 predictEnsemble
 ```
 
 
 ## list of algorithms
- 
+
  basic algorithm for computing a true posterior distribution using bootstrap sampling and arbitrary loss functions.
 ```@docs
 bootstrapPosteriorEstimation
 ```
- 
+
  basic algorithm for computing a true posterior distribution using bootstrap sampling and arbitrary loss functions, parameter return version.
- ```@docs
+```@docs
 bootstrapPosteriorEstimation!
 ```
- 
+
  basic algorithm for computing a true posterior distribution using bootstrap sampling and the linear correlation.
 ```@docs
 bootstrapPosteriorCorEstimation
@@ -71,8 +87,10 @@ TDistPosteriorEstimationReference
 ```
 
 ## refine tuning algorithms
-given a solution for the ensemble learning problem, this method seeks to further improve the solution by refining it using unconstrainted optimization
-under _Mean Squared Error_ loss function.
+given a solution for the ensemble learning problem, this method seeks to further improve the solution by refining it using unconstrainted optimization under _Mean Squared Error_ loss function.
+
+The resulting solutions aren't guaranteed to be valid probability distributions.
+
 ```@docs
 directOptimNaiveMSE
 ```
@@ -96,9 +114,7 @@ ___
 
 
 """
-Some nice documentation here.
 
-# Examples
 ```jldoctest
 
 using AgnosticBayesEnsemble
@@ -195,10 +211,11 @@ _**supported problems per fine tuning algorithms**_
 | δOptimizationHinge            |            yes            |             no              |           no          |             no              |
 | δOptimizationHingeRegularized |            yes            |             no              |           no          |             no              |
 | δOptimizationMSERegularized   |            yes            |             no              |           yes         |             no              |
- 
 
- 
+
+
 ## Index
- 
+
 ```@index
+
 ```
