@@ -356,7 +356,8 @@ using ProgressMeter
     cnames          = string.( "w", collect( 1:1:d ) );
     append!( cnames, ["Entropy","MSE"] );
     parameterEvalDf = DataFrame( Matrix{Float64}( undef, siblings * generations, d + 2 ) );
-    names!( parameterEvalDf, Symbol.( cnames ) ); ## FIXME: broke
+    ##names!( parameterEvalDf, Symbol.( cnames ) ); ## FIXME: broke
+    rename!( parameterEvalDf, Symbol.( cnames ) );
     
     for i in 1:1:generations
       ## run  all parameters of parmeterDF, store results in resultDF, parameterEvalDf
@@ -424,8 +425,8 @@ using ProgressMeter
     cnames          = string.( "w", collect( 1:1:d ) );
     append!( cnames, ["Entropy","hLoss"] );
     parameterEvalDf = DataFrame( Matrix{Float64}( undef, siblings * generations, d + 2 ) );
-    names!( parameterEvalDf, Symbol.( cnames ) ); ## FIXME: broke
-    
+    ##names!( parameterEvalDf, Symbol.( cnames ) ); ## FIXME: broke
+    rename!( parameterEvalDf, Symbol.( cnames ) );
     for i in 1:1:generations
       ## run  all parameters of parmeterDF, store results in resultDF, parameterEvalDf
       @showprogress 1 "Computing..." for row in 1:1:siblings
