@@ -6,7 +6,7 @@ using DataFrames
 
 println( "running direct solution unit tests" );
 
-predMatTraining, predMatEval, tTraining, tEval, errMatTraining = makeupPredictions()
+predMatTraining, predMatEval, tTraining, tEval, errMatTraining = makeupPredictions();
 
 predMat = convert( Matrix{Float64}, predMatTraining );
 t       = Float64.( tTraining );

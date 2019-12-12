@@ -6,7 +6,7 @@
 
 
 
-​           __Auticon Analytics__
+​           __Auticon Berlin, Machine Learning Group__
 
 
 
@@ -70,10 +70,10 @@ using MultivariateStats
 
 #== create artificial predictions and ground truth ==#
 function distortBinaryPrediction( y::BitArray{1}, distortionFactor::Float64 )
-​    res          = deepcopy( y );  
-​    indices      = rand( 1:1:size( y, 1 ), round( Int64, distortionFactor * size( y, 1 ) ) );
-​    res[indices] = .!y[indices];
-​    return res;
+    res          = deepcopy( y );   
+    indices      = rand( 1:1:size( y, 1 ), round( Int64, distortionFactor * size( y, 1 ) ) );
+    res[indices] = .!y[indices];
+    return res;
 end  
 
 n    = 100000;
@@ -109,21 +109,20 @@ nrRuns          = 100000
 α_              = 1.0
 
 #== use bootstrap correlation algorithm to estimate the model posterior  distribution ==#
-P = bootstrapPosteriorCorEstimation( predictions, y, sampleSize, nrRuns );
+pBCE = bootstrapPosteriorCorEstimation( convert( Matrix{Float64},predictions ), Float64.( y ), sampleSize, nrRuns );
 
 #== use bootstrap algorithm to estimate the model posterior distribution ==#
-p = bootstrapPosteriorEstimation( Matrix( errMatTraining ), sampleSize, nrRuns ); 
+pBE  = bootstrapPosteriorEstimation( Matrix( errMatTraining ), sampleSize, nrRuns ); 
 
 #== use Dirichletian algorithm to estimate the model posterior distribution ==#
-P = dirichletPosteriorEstimation( errMatTraining, nrRuns, α_ );
+pDI = dirichletPosteriorEstimation( errMatTraining, nrRuns, α_ );
 
 #== use T-Distribution algorithm to estimate the model posterior distribution ==#
-P = TDistPosteriorEstimation( errMatTraining, nrRuns );
+pTD = TDistPosteriorEstimation( errMatTraining, nrRuns );
 
-
-
-#== make ensemble prediction ==#
-prediction = predictEnsemble( predictionsEval, p );
+sum( pBCE ) + sum( pBE ) + sum( pDI ) + sum( pTD ) ≈ 4.0
+# output
+true
 ```
 """
 

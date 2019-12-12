@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>- · AgnosticBayesEnsemble</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">AgnosticBayesEnsemble</span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>-</a><ul class="internal"><li><a class="tocitem" href="#generic-methods-1"><span>generic methods</span></a></li><li><a class="tocitem" href="#list-of-algorithms-1"><span>list of algorithms</span></a></li><li><a class="tocitem" href="#refine-tuning-algorithms-1"><span>refine tuning algorithms</span></a></li><li><a class="tocitem" href="#Tutorials-1"><span>Tutorials</span></a></li><li><a class="tocitem" href="#Index-1"><span>Index</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>-</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>-</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><p>#Agnostic Bayes Ensemble Documentation </p><p><strong>Overview</strong></p><p>I have to thank my employer Auticon Berlin for letting me develop this package in my working time. Agnostic Bayes Ensemble is thought to be basis technology, that will be refined over time, furthermore it forms one pillar of a upcoming machine learning framework, which is supposed to consist of three broad branches: </p><ul><li>cleaning and transformation of datasets.</li></ul><ul><li>ensemble algorithms.</li></ul><ul><li>general applicable meta parameter learning.</li></ul><p>There are minimal requirements regarding the installation and usage of this package. Right now, the only prerequisite is running on a machine with Julia 1.X installed. However in the upcoming releases GPU support in form of CUDA will be integrated, from there on out, CUDA-DEV-Kit will become a prerequisite.  </p><p>This package has been developed to facilitate increased predictive performance, by combining raw base models in an agnostic fashion, i.e. the methods don’t use any assumption regarding the used raw models. Furthermore, we specifically implemented ensemble algorithms that can deal with arbitrary loss function and with regression and classification problems, this holds true for all, except for the dirichletPosterior estimation algorithm, which is limited to classification problems.</p><p>The algorithms bootstrapPosteriorEstimation, bootstrapPosteriorCorEstimation, dirichletPosteriorEstimation, TDistPosteriorEstimation infer an actual posterior distribution.</p><p>The algorithms  δOptimizationMSE ,   δOptimizationHinge ,  δOptimizationHingeRegularized,  δOptimizationMSERegularized do not, these algorithms are inferring mixing coefficients not required to be true probability distributuions . </p><p><strong>Hint</strong>: In most cases it is advisable to <em>deactivate</em> Hyperthreading for best performance. However, in some rare cases – depending on the (hardware) platform the package runs on- you will get the best performance with Hyperthreading enabled, to be sure, it is best practice to measure the performance with and without Hyperthreading.</p><h2 id="generic-methods-1"><a class="docs-heading-anchor" href="#generic-methods-1">generic methods</a><a class="docs-heading-anchor-permalink" href="#generic-methods-1" title="Permalink"></a></h2><p>make a prediction given trained mixing coefficients and input Matrix.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.predictEnsemble" href="#AgnosticBayesEnsemble.predictEnsemble"><code>AgnosticBayesEnsemble.predictEnsemble</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">predictEnsemble( predictions::Matrix{Float64}, weights::Vector{Float64} )
+
+
+
+
+perform bayesian ensemble prediction.
+#Arguments
+- `predictions::Matrix{Float64}`: each column is the prediction of one hypothesis.
+- `weights::Vector{Float64}`:     mixing weights.
+#Return
+- `Vector{Float64}`:              prediction y.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/AgnosticBayesEnsemble.jl#L27-L40">source</a></section><section><div><p>predictEnsemble( predictions::Vector{Matrix{Float64}}, weights::Vector{Float64} )</p><p>perform bayesian ensemble prediction. #Arguments</p><ul><li><code>predictions::Vector{Matrix{Float64}}</code>: each matrix is the prediction of one hypothesis.</li><li><code>weights::Vector{Float64}</code>:             mixing weights.</li></ul><p>#Return</p><ul><li><code>Vector{Float64}</code>:                      prediction y.</li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/AgnosticBayesEnsemble.jl#L48-L61">source</a></section></article><h2 id="list-of-algorithms-1"><a class="docs-heading-anchor" href="#list-of-algorithms-1">list of algorithms</a><a class="docs-heading-anchor-permalink" href="#list-of-algorithms-1" title="Permalink"></a></h2><p>basic algorithm for computing a true posterior distribution using bootstrap sampling and arbitrary loss functions.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.bootstrapPosteriorEstimation" href="#AgnosticBayesEnsemble.bootstrapPosteriorEstimation"><code>AgnosticBayesEnsemble.bootstrapPosteriorEstimation</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">bootstrapPosteriorEstimation( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
+
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `errMat::Matrix{Float64}}`: each column is the prediction error of one hypothesis.
+- `samplingBatchSize::Int64`: sample size per main iteration.
+- `nrRuns::Int64`:            number of passes over predictions.
+#Return
+- `Vector{Float64}`:          Distribution p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/bootstrapPosteriorEstimation.jl#L4-L17">source</a></section></article><p>basic algorithm for computing a true posterior distribution using bootstrap sampling and arbitrary loss functions, parameter return version.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.bootstrapPosteriorEstimation!" href="#AgnosticBayesEnsemble.bootstrapPosteriorEstimation!"><code>AgnosticBayesEnsemble.bootstrapPosteriorEstimation!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">bootstrapPosteriorEstimation!( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64, p::Array{Float64} )
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `errMat::Matrix{Float64}}`: each column is the prediction error of one hypothesis.
+- `samplingBatchSize::Int64`: sample size per main iteration.
+- `nrRuns::Int64`:            number of passes over predictions.
+- `p::Vector{Float64}`:       resulting posterior p( h* = h | S ).
+#Return
+- `nothing`:                  nothing.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/bootstrapPosteriorEstimation.jl#L30-L43">source</a></section></article><p>basic algorithm for computing a true posterior distribution using bootstrap sampling and the linear correlation.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.bootstrapPosteriorCorEstimation" href="#AgnosticBayesEnsemble.bootstrapPosteriorCorEstimation"><code>AgnosticBayesEnsemble.bootstrapPosteriorCorEstimation</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, t::Vector{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
+
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `predictions::Matrix{Float64}`: each column is the prediction of one hypothesis.
+- `t::Vector{Float64}`:           label vector.
+- `samplingBatchSize::Int64`:     sample size per main iteration.
+- `nrRuns::Int64`:                number of main  iterations.
+#Return
+- `Vector{Float64}`:              posterior p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/bootstrapPosteriorCorEstimation.jl#L4-L18">source</a></section><section><div><pre><code class="language-none">bootstrapPosteriorCorEstimation( predictions::Vector{Matrix{Float64}}, T::Matrix{Float64}, samplingFactor::Float64, nrRuns::Int64 )
+
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `predictions::Matrix{Float64}`: each column is the prediction of one hypothesis.
+- `T::Matrix{Float64}`:           label matrix.
+- `samplingBatchSize::Int64`:     sample size per main iteration.
+- `nrRuns::Int64`:                number of main  iterations.
+#Return
+- `Vector{Float64}`:              posterior p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/bootstrapPosteriorCorEstimation.jl#L33-L47">source</a></section></article><p>advanced algorithm, probabilistic inference using a dirichlatian prior.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.dirichletPosteriorEstimation" href="#AgnosticBayesEnsemble.dirichletPosteriorEstimation"><code>AgnosticBayesEnsemble.dirichletPosteriorEstimation</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">dirichletPosteriorEstimation( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
+
+
+
+
+compute posterior p( h* = h | S ).
+# Arguments
+- `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+- `G::Matrix{Float64}`:      transformation matrix G.
+- `nrRuns::Int64`:           number of sampling runs.
+- `α_::Float64`:             scalar prior parameter.
+- `sampleSize::Int64`:       number of samples per run.
+# Return
+- `Vector{Float64}`:         posterior distribution</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/dirichletPosteriorEstimation.jl#L44-L59">source</a></section><section><div><pre><code class="language-none">dirichletPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64 )
+
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+- `nrRuns::Int64`:           number of main  iterations.
+- `α_::Float64`:             scalar prior parameter.
+#Return
+- `Vector{Float64}`:         posterior p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/dirichletPosteriorEstimation.jl#L163-L176">source</a></section></article><p>advanced algorithm, probabilistic inference using a dirichlatian prior, improved performance and hardware usage under certain parameters.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.dirichletPosteriorEstimationV2" href="#AgnosticBayesEnsemble.dirichletPosteriorEstimationV2"><code>AgnosticBayesEnsemble.dirichletPosteriorEstimationV2</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">dirichletPosteriorEstimationV2( errMat::Matrix{Float64}, G::Matrix{Float64}, nrRuns::Int64, α_::Float64, sampleSize::Int64 )
+
+
+
+
+compute posterior p( h* = h | S ), alternative version for improved performance.
+# Arguments
+- `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+- `G::Matrix{Float64}`:      transformation matrix G.
+- `nrRuns::Int64`:           number of sampling runs.
+- `α_::Float64`:             scalar prior parameter.
+- `sampleSize::Int64`:       number of samples per run.
+# Return
+- `Vector{Float64}`:         posterior distribution posterior p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/dirichletPosteriorEstimation.jl#L99-L114">source</a></section><section><div><pre><code class="language-none">dirichletPosteriorEstimationV2( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64, sampleSize::Int64 )
+
+
+
+
+compute posterior p( h* = h | S ), alternative version for improved performance.
+# Arguments
+- `errMat::Matrix{Float64}`: each column is the prediction of one hypothesis.
+- `nrRuns::Int64`:           number of sampling runs.
+- `α_::Float64`:             scalar prior parameter.
+- `sampleSize::Int64`:       number of samples per run.
+# Return
+- `Vector{Float64}`:         posterior distribution p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/dirichletPosteriorEstimation.jl#L183-L197">source</a></section></article><p>precomputation of the transformation Matrix G, should be precomputed once, if bootstrapPosteriorCorEstimation gets called several times.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.GMatrix" href="#AgnosticBayesEnsemble.GMatrix"><code>AgnosticBayesEnsemble.GMatrix</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">GMatrix( d::Int64 )
+
+
+
+
+compute transformation matrix G.
+#Arguments
+- `d::Int64`:        number of hypothesis used for prediction.
+#Return
+- `Matrix{Float64}`: transformation matrix G.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/dirichletPosteriorEstimation.jl#L23-L34">source</a></section></article><p>advanced algorithm, probabilistic inference using a dirichlatian prior, parameter return version.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.dirichletPosteriorEstimation!" href="#AgnosticBayesEnsemble.dirichletPosteriorEstimation!"><code>AgnosticBayesEnsemble.dirichletPosteriorEstimation!</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">dirichletPosteriorEstimation!( errMat::Matrix{Float64}, nrRuns::Int64, α_::Float64, p::Vector{Float64} )
+
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+- `nrRuns::Int64`:           number of passes over predictions.
+- `α_::Float64`:             meta parameter value.
+- `p::Vector{Float64}`:      return value posterior p( h* = h | S ).
+#Return
+- `nothing`:                 nothing.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/dirichletPosteriorEstimation.jl#L204-L218">source</a></section></article><p>parameter search for prior parameter α.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.metaParamSearchValidationDirichlet" href="#AgnosticBayesEnsemble.metaParamSearchValidationDirichlet"><code>AgnosticBayesEnsemble.metaParamSearchValidationDirichlet</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">metaParamSearchValidationDirichlet( Y::Matrix{Float64}, t::Vector{Float64}, nrRuns::Int64, minVal::Float64, maxVal::Float64, nSteps::Int64, holdout::Float64, lossFunc )    
+
+
+
+
+compute best α parameter regarding predictive performance.
+#Arguments
+- `Y::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+- `t::Vector{Float64}`: label vector.
+- `nrRuns::Int64`:      number of passes over predictions.
+- `minVal::Float64`:    minimum value of α.
+- `maxVal::Float64`:    maximum value of α.
+- `nSteps::Int64`:      number of steps between min and max val.
+- `holdout::Float64`:   percentage used in holdout.
+- `lossFunc`:           error function handle.
+#Return
+- `Vector{Float64} x2`: α_sequence, performance_sequence.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/dirichletPosteriorEstimation.jl#L226-L244">source</a></section></article><p>advanced algorithm, probabilistic inference using a T-distribution prior.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.TDistPosteriorEstimation" href="#AgnosticBayesEnsemble.TDistPosteriorEstimation"><code>AgnosticBayesEnsemble.TDistPosteriorEstimation</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">TDistPosteriorEstimation( errMat::Matrix{Float64}, nrRuns::Int64; [κ_0::Float64=1.0] [, v_0::Float64=Float64( size( errMat, 2 ) )] [, α::Float64=0.5] [, β::Float64=0.25] )
+
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `errMat::Matrix{Float64}`:                   each column is the prediction error of one hypothesis.
+- `nrRuns::Int64`:                             number of main  iterations.
+- `κ_0::Float64=1.0`:                          regularization param.
+- `v_0::Float64=Float64( size( errMat, 2 ) )`: regularization param.
+- `α::Float64=0.5`:                            regularization param.
+- `β::Float64=0.25`:                           regularization param.
+#Return
+- `Vector{Float64}`:                           posterior p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/TDistPosteriorEstimation.jl#L55-L71">source</a></section></article><p>advanced algorithm, probabilistic inference using a T-distribution prior, reference algorithm.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.TDistPosteriorEstimationReference" href="#AgnosticBayesEnsemble.TDistPosteriorEstimationReference"><code>AgnosticBayesEnsemble.TDistPosteriorEstimationReference</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">TDistPosteriorEstimationReference( errMat::Matrix{Float64}, nrRuns::Int64 )
+
+
+
+
+compute posterior p( h* = h | S ).
+#Arguments
+- `errMat::Matrix{Float64}`: each column is the prediction error of one hypothesis.
+- `nrRuns::Int64`:                number of main  iterations.
+#Return
+- `Vector{Float64}`:              posterior p( h* = h | S ).</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/TDistPosteriorEstimation.jl#L12-L24">source</a></section></article><h2 id="refine-tuning-algorithms-1"><a class="docs-heading-anchor" href="#refine-tuning-algorithms-1">refine tuning algorithms</a><a class="docs-heading-anchor-permalink" href="#refine-tuning-algorithms-1" title="Permalink"></a></h2><p>given a solution for the ensemble learning problem, this method seeks to further improve the solution by refining it using unconstrainted optimization under <em>Mean Squared Error</em> loss function.</p><p>The resulting solutions aren&#39;t guaranteed to be valid probability distributions.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.directOptimNaiveMSE" href="#AgnosticBayesEnsemble.directOptimNaiveMSE"><code>AgnosticBayesEnsemble.directOptimNaiveMSE</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">directOptimNaiveMSE( predMat::Matrix{Float64}, t::Vector{Float64}, p::Vector{Float64} )
+
+
+
+
+compute refined solution _for_ mixing parameter p.
+#Arguments
+- `predMat::Matrix{Float64}`: each column is the prediction _of_ one hypothesis.
+- `t::Vector{Float64}`:       label vector.
+- `p::Vector{Float64}`:       initial solution for mixing coefficients.
+#Return
+- `Vector{Float64}`:          improved initial solution.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/directSolution.jl#L40-L53">source</a></section></article><p>given a solution for the ensemble learning problem, this method seeks to further improve the solution by refining it using unconstrainted optimization under <em>Hinge</em> loss function.</p><article class="docstring"><header><a class="docstring-binding" id="AgnosticBayesEnsemble.directOptimHinge" href="#AgnosticBayesEnsemble.directOptimHinge"><code>AgnosticBayesEnsemble.directOptimHinge</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia">directOptimHinge( predMat::Matrix{Float64}, t::Vector{Float64}, p::Vector{Float64} )
+
+
+
+
+compute refined solution _for_ mixing parameter p.
+#Arguments
+- `predMat::Matrix{Float64}`: each column is the prediction _of_ one hypothesis.
+- `t::Vector{Float64}`:       label vector.
+- `p::Vector{Float64}`:       initial solution for mixing coefficients.
+#Return
+- `Vector{Float64}`:          improved initial solution.</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/hondoRandale/AgnosticBayesEnsemble.jl/blob/8a244c68755a038cda4a36c58f5335c72e7fa7d8/src/directSolution.jl#L63-L76">source</a></section></article><h2 id="Tutorials-1"><a class="docs-heading-anchor" href="#Tutorials-1">Tutorials</a><a class="docs-heading-anchor-permalink" href="#Tutorials-1" title="Permalink"></a></h2><p><strong><em>low level Interface</em></strong></p><p>The Interface was designed to be easy to use, therefore all parameters needed by the algorithms in the package are either y<em>1, y</em>2, y<em>3, …, y</em>k the predictions per raw model along with the label vector T, Or alternatively e<em>1, e</em>2, e<em>3, …, e</em>k the error between predicted and real labels and ground truth T. Some of the methods need additional (prior-) parameters, however this simple basic structure is consistent along all implemented ensemble methods in this package. ___</p><p><strong><em>Examples</em></strong></p><p>&quot;&quot;&quot;</p><pre><code class="language-julia">
+using AgnosticBayesEnsemble
+using DataFrames
+using Random
+using Statistics
+using StaticArrays
+using Optim
+using MultivariateStats
+
+
+
+#== create artificial predictions and ground truth ==#
+function distortBinaryPrediction( y::BitArray{1}, distortionFactor::Float64 )
+​    res          = deepcopy( y );  
+​    indices      = rand( 1:1:size( y, 1 ), round( Int64, distortionFactor * size( y, 1 ) ) );
+​    res[indices] = .!y[indices];
+​    return res;
+end  
+
+n    = 100000;
+y    = Bool.( rand( 0:1,n ) );
+yH1  = distortBinaryPrediction( y, 0.20 );
+yH2  = distortBinaryPrediction( y, 0.21 );
+yH3  = distortBinaryPrediction( y, 0.22 );
+yH4  = distortBinaryPrediction( y, 0.23 );
+yH5  = distortBinaryPrediction( y, 0.24 );
+yH6  = distortBinaryPrediction( y, 0.24 );
+yH7  = distortBinaryPrediction( y, 0.26 );
+yH8  = distortBinaryPrediction( y, 0.27 );
+yH9  = distortBinaryPrediction( y, 0.28 );
+yH10 = distortBinaryPrediction( y, 0.29 );
+yH11 = distortBinaryPrediction( y, 0.30 );
+yH12 = distortBinaryPrediction( y, 0.33 );
+yH13 = distortBinaryPrediction( y, 0.34 );
+yH14 = distortBinaryPrediction( y, 0.35 );
+yH15 = distortBinaryPrediction( y, 0.36 );
+yH16 = distortBinaryPrediction( y, 0.37 );
+
+#== split generated prediction set into disjoint sets eval and train==#
+limit           = round( Int64, 0.7 * size( y, 1 ) );
+predictions     = DataFrame( h1=yH1, h2=yH2, h3=yH3, h4=yH4, h5=yH5, h6=yH6, h7=yH7, h8=yH8, h9=yH9, h10=yH10, h11=yH11, h12=yH12, h13=yH13, h14=yH14, h15=yH15, h16=yH16 );
+predTraining    = predictions[1:limit,:];
+predEval        = predictions[limit+1:end,:];
+predMatTraining = convert( Matrix{Float64}, predTraining );
+predMatEval     = convert( Matrix{Float64}, predEval );
+errMatTraining  = ( repeat( Float64.( y[1:limit] ),outer = [1,size(predictions,2)] ) .- predMatTraining ).^2;
+errMatTraining  = convert( Matrix{Float64}, errMatTraining );
+sampleSize      = 32
+nrRuns          = 100000
+α_              = 1.0
+
+#== use bootstrap correlation algorithm to estimate the model posterior  distribution ==#
+P = bootstrapPosteriorCorEstimation( predictions, y, sampleSize, nrRuns );
+
+#== use bootstrap algorithm to estimate the model posterior distribution ==#
+p = bootstrapPosteriorEstimation( Matrix( errMatTraining ), sampleSize, nrRuns ); 
+
+#== use Dirichletian algorithm to estimate the model posterior distribution ==#
+P = dirichletPosteriorEstimation( errMatTraining, nrRuns, α_ );
+
+#== use T-Distribution algorithm to estimate the model posterior distribution ==#
+P = TDistPosteriorEstimation( errMatTraining, nrRuns );
+
+
+
+#== make ensemble prediction ==#
+prediction = predictEnsemble( predictionsEval, p );</code></pre><p>&quot;&quot;&quot;</p><p><strong>supported problems per algorithm</strong></p><table><tr><th style="text-align: center">algorithm</th><th style="text-align: center">univariate Classification</th><th style="text-align: center">multivariate Classification</th><th style="text-align: center">univariate Regression</th><th style="text-align: center">multivariate Classification</th></tr><tr><td style="text-align: center">bootstrap</td><td style="text-align: center">yes</td><td style="text-align: center">yes</td><td style="text-align: center">yes</td><td style="text-align: center">yes</td></tr><tr><td style="text-align: center">bootstrap cor.</td><td style="text-align: center">yes</td><td style="text-align: center">no</td><td style="text-align: center">yes</td><td style="text-align: center">no</td></tr><tr><td style="text-align: center">dirichletian</td><td style="text-align: center">yes, only {0,1}-loss</td><td style="text-align: center">yes, only {0,1}-loss</td><td style="text-align: center">no</td><td style="text-align: center">no</td></tr><tr><td style="text-align: center">t-distribution</td><td style="text-align: center">yes</td><td style="text-align: center">yes</td><td style="text-align: center">yes</td><td style="text-align: center">yes</td></tr></table><p>___</p><p><em><strong>supported problems per fine tuning algorithms</strong></em></p><table><tr><th style="text-align: center">algorithm</th><th style="text-align: center">univariate Classification</th><th style="text-align: center">multivariate Classification</th><th style="text-align: center">univariate Regression</th><th style="text-align: center">multivariate Classification</th></tr><tr><td style="text-align: center">δOptimizationMSE</td><td style="text-align: center">yes</td><td style="text-align: center">no</td><td style="text-align: center">yes</td><td style="text-align: center">no</td></tr><tr><td style="text-align: center">δOptimizationHinge</td><td style="text-align: center">yes</td><td style="text-align: center">no</td><td style="text-align: center">no</td><td style="text-align: center">no</td></tr><tr><td style="text-align: center">δOptimizationHingeRegularized</td><td style="text-align: center">yes</td><td style="text-align: center">no</td><td style="text-align: center">no</td><td style="text-align: center">no</td></tr><tr><td style="text-align: center">δOptimizationMSERegularized</td><td style="text-align: center">yes</td><td style="text-align: center">no</td><td style="text-align: center">yes</td><td style="text-align: center">no</td></tr></table><h2 id="Index-1"><a class="docs-heading-anchor" href="#Index-1">Index</a><a class="docs-heading-anchor-permalink" href="#Index-1" title="Permalink"></a></h2><ul><li><a href="#AgnosticBayesEnsemble.GMatrix"><code>AgnosticBayesEnsemble.GMatrix</code></a></li><li><a href="#AgnosticBayesEnsemble.TDistPosteriorEstimation"><code>AgnosticBayesEnsemble.TDistPosteriorEstimation</code></a></li><li><a href="#AgnosticBayesEnsemble.TDistPosteriorEstimationReference"><code>AgnosticBayesEnsemble.TDistPosteriorEstimationReference</code></a></li><li><a href="#AgnosticBayesEnsemble.bootstrapPosteriorCorEstimation"><code>AgnosticBayesEnsemble.bootstrapPosteriorCorEstimation</code></a></li><li><a href="#AgnosticBayesEnsemble.bootstrapPosteriorEstimation"><code>AgnosticBayesEnsemble.bootstrapPosteriorEstimation</code></a></li><li><a href="#AgnosticBayesEnsemble.bootstrapPosteriorEstimation!"><code>AgnosticBayesEnsemble.bootstrapPosteriorEstimation!</code></a></li><li><a href="#AgnosticBayesEnsemble.directOptimHinge"><code>AgnosticBayesEnsemble.directOptimHinge</code></a></li><li><a href="#AgnosticBayesEnsemble.directOptimNaiveMSE"><code>AgnosticBayesEnsemble.directOptimNaiveMSE</code></a></li><li><a href="#AgnosticBayesEnsemble.dirichletPosteriorEstimation"><code>AgnosticBayesEnsemble.dirichletPosteriorEstimation</code></a></li><li><a href="#AgnosticBayesEnsemble.dirichletPosteriorEstimation!"><code>AgnosticBayesEnsemble.dirichletPosteriorEstimation!</code></a></li><li><a href="#AgnosticBayesEnsemble.dirichletPosteriorEstimationV2"><code>AgnosticBayesEnsemble.dirichletPosteriorEstimationV2</code></a></li><li><a href="#AgnosticBayesEnsemble.metaParamSearchValidationDirichlet"><code>AgnosticBayesEnsemble.metaParamSearchValidationDirichlet</code></a></li><li><a href="#AgnosticBayesEnsemble.predictEnsemble"><code>AgnosticBayesEnsemble.predictEnsemble</code></a></li></ul></article></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 12 December 2019 14:34">Thursday 12 December 2019</span>. Using Julia version 1.2.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

@@ -15,7 +15,8 @@ module AgnosticBayesEnsemble
          δOptimizationMSE, δOptimizationMSERegularized,
          δTuneMSEMeta, δTuneHingeMeta
 
-  include( "argminProb.jl" )       
+  include( "argminProb.jl" )
+  include( "argmaxProb.jl" )       
   include( "bootstrapPosteriorCorEstimation.jl" )
   include( "dirichletPosteriorEstimation.jl" )
   include( "gradientDescentOptimizePosterior.jl" )

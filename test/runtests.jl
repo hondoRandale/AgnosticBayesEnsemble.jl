@@ -1,3 +1,4 @@
+include( "testingUtils.jl" )
 include( "unitTestargminProb.jl" )
 include( "unitTestargmaxProb.jl" )
 include( "unitTestBootStrapCorEstimation.jl" )
