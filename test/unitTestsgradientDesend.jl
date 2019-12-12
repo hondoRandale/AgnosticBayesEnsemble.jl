@@ -12,8 +12,8 @@ predMatTraining, predMatEval, tTraining, tEval, errMatTraining = makeupPredictio
 d         = size( predMatTraining, 2 );
 YHopfield = deepcopy( predMatTraining );
 toHopfieldEncoding!( YHopfield,predMatTraining );
-tHopfield = deepcopy( y[1:limit] );
-toHopfieldEncoding!( tHopfield, y[1:limit] );
+tHopfield = deepcopy( tTraining );
+toHopfieldEncoding!( tHopfield, tTraining );
 
 #** Expirement 1: start with uniform distribution, hingeLoss **#
 posteriorUni   = repeat( Array{Float64}([ 1/d ]), outer=[1, d] )[1,:];
