@@ -1,7 +1,5 @@
-| **Documentation**                                                               | **Build Status**                                                                                |
-|:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
-| [![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url] | [![][travis-img]][travis-url] [![][appveyor-img]][appveyor-url] [![][codecov-img]][codecov-url] |
-
+[![Travis](https://travis-ci.com/hondoRandale/AgnosticBayesEnsemble.jl.svg?branch=master)](https://travis-ci.com/hondoRandale/AgnosticBayesEnsemble.jl)
+[![Coverage Status](https://coveralls.io/repos/github/hondoRandale/AgnosticBayesEnsemble.jl/badge.svg?branch=master)](https://coveralls.io/github/hondoRandale/AgnosticBayesEnsemble.jl?branch=master)
 **AgnosticBayesEnsemble**  
 
 
