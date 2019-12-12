@@ -38,11 +38,7 @@ module AgnosticBayesEnsemble
       - `Vector{Float64}`:              prediction y.
   """
   function predictEnsemble( predictions::Matrix{Float64}, weights::Vector{Float64} )
-    res = zeros( Float64, size( predictions )[1] );
-    for (i,col) in enumerate( eachcol( predictions ) )
-      res .+= ( weights[i] .* col );
-    end
-    return res;
+    return predictions * weights;
   end
 
   """ 
