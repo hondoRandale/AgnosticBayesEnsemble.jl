@@ -20,12 +20,14 @@ branches:
 
 notifications:
   email: false
-
+Env:
+  - CODECOV_TOKEN="b9f8cc39-c352-4000-b4f5-dd11d0362ed9"
 after_success:
   - if [ -f test/quietly.log ]; then cat test/quietly.log; fi
   - if [[ $TRAVIS_JULIA_VERSION = 1.1 ]] && [[ $TRAVIS_OS_NAME = linux ]]; then
-      julia --project=coverage/ -e 'using Pkg; Pkg.instantiate();
-          using Coverage; Codecov.submit(Codecov.process_folder())';
+      julia --project=coverage/ -e 'using Pkg; Pkg.instantiate(); 
+              pkg.add("Coverage"); using Coverage; Pkg.test("AgnosticBayesEnsemble", coverage=true);
+              Codecov.submit(Codecov.process_folder())';
     fi
 
 jobs:
@@ -51,3 +53,4 @@ jobs:
       name: "PDF"
       after_success: skip
       services: docker
+      codecov: true
