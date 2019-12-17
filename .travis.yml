@@ -25,8 +25,8 @@ Env:
 after_success:
   - if [ -f test/quietly.log ]; then cat test/quietly.log; fi
   - julia --project=coverage/ -e 'using Pkg; Pkg.instantiate(); 
-            pkg.add("Coverage"); using Coverage;
-            Codecov.submit(Codecov.process_folder()); run( `bash <(curl -s https://codecov.io/bash)` )';
+            Pkg.add("Coverage"); using Coverage;
+            Codecov.submit( Codecov.process_folder() );
 
 jobs:
   include:
