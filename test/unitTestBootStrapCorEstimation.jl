@@ -13,3 +13,4 @@ posterior = bootstrapPosteriorCorEstimation( predMatTraining, yTraining, 64, 100
 @test all( posterior .>= 0.0 );
 @test all( posterior .<= 1.0 );
 @test all( sum( posterior ) ≈ 1.0 );
+
