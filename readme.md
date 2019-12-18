@@ -2,7 +2,7 @@
 **AgnosticBayesEnsemble**  
 
 [![Travis](https://travis-ci.com/hondoRandale/AgnosticBayesEnsemble.jl.svg?branch=master)](https://travis-ci.com/hondoRandale/AgnosticBayesEnsemble.jl)
-[![Coverage Status](https://codecov.io/gh/hondoRandale/AgnosticBayesEnsemble.jl/branch/master/graphs/sunburst.svg)](https://codecov.io/gh/hondoRandale/AgnosticBayesEnsemble.jl)
+[![codecov.io](https://codecov.io/gh/hondoRandale/AgnosticBayesEnsemble.jl/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/gh/hondoRandale/AgnosticBayesEnsemble.jl/branch/master/graphs/badge.svg?branch=master)
 
 
 
