@@ -152,7 +152,7 @@ using Match
       end
       q           = αSample .+ KSample;
       r           = G * q;
-      argminUniProb.argminProb( r, labels );
+      argminUniProb.argminProb!( r, labels );
       for pos in labels
         res[pos] += 1.0;
       end

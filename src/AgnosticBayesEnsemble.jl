@@ -5,7 +5,6 @@ module AgnosticBayesEnsemble
          dirichletPosteriorEstimationV2, dirichletPosteriorEstimation!,
          metaParamSearchValidationDirichlet, 
          bootstrapPosteriorEstimation, bootstrapPosteriorEstimation!,
-         bootstrapPosteriorEstimationP, 
          bootstrapPosteriorCorEstimation,
          TDistPosteriorEstimation, TDistPosteriorEstimationReference,
          predictEnsemble,

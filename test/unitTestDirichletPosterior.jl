@@ -9,28 +9,38 @@ using Optim
 using MultivariateStats
 
 println( "running dirichletian algorithm unit tests" );
-predMatTraining, predMatEval, yTraining, yEval, errMatTraining = makeupPredictions();
-posterior   = dirichletPosteriorEstimation( errMatTraining, 10000, 2.34 );
+predMatTraining, predMatEval, tTraining, tEval, errMatTraining = makeupPredictions();
+posterior = dirichletPosteriorEstimation( errMatTraining, 10000, 2.34 );
+
+@test all( posterior .>= 0.0 )
+@test all( posterior .<= 1.0 )
 @test sum( posterior ) ≈ 1.0
 
-#== convert data to hopfield encoding ==#
-YHopfield   = deepcopy( predMatEval );
-toHopfieldEncoding!( YHopfield, predMatEval );
-tHopfield   = deepcopy( yEval );
-toHopfieldEncoding!( tHopfield, yEval );
+posterior = dirichletPosteriorEstimationV2( errMatTraining, 1000, 2.34, 10 );
 
-#== ensemble prediction bayesion posterior ==#
-yEns      = sign.( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posterior ) ); 
-mean( lossFunctions.hingeLoss( yEns, tHopfield ) );
+@test all( posterior .>= 0.0 )
+@test all( posterior .<= 1.0 )
+@test sum( posterior ) ≈ 1.0
 
-#== ensemble prediction bayesion posterior fine tuned by gradient descend ==#
-result     = δOptimizationHinge( posterior, YHopfield, tHopfield, 20 );
-posterior2 = Optim.minimizer( result );
-yEns2      = sign.( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posterior2 ) ); 
-@test mean( lossFunctions.hingeLoss( yEns2, tHopfield ) ) < mean( lossFunctions.hingeLoss( yEns, tHopfield ) )
+posterior = zeros( Float64, size( errMatTraining, 2 ) );
+dirichletPosteriorEstimation!( errMatTraining, 10000, 2.34, posterior )
 
-#== ensemble prediction bayesion posterior fine tuned by gradient descend regularized ==#
-result     = δOptimizationHingeRegularized( posterior, YHopfield, tHopfield, 20, 2.5, 0.5, -0.8*log( 1/16 ) );
-posterior3 = Optim.minimizer( result )
-yEns3      = sign.( AgnosticBayesEnsemble.predictEnsemble( YHopfield, posterior3 ) ); 
-##@test mean( hingeLoss( yEns3, tHopfield ) ) < mean( hingeLoss( yEns, tHopfield ) )
+@test all( posterior .>= 0.0 )
+@test all( posterior .<= 1.0 )
+@test sum( posterior ) ≈ 1.0
+
+αSequence, performance = metaParamSearchValidationDirichlet( predMatTraining, tTraining, 1000, 0.05, 10.0, 20, 0.25, lossFunctions.MSE );
+best_index            = argmaxUniProb.argmaxProb( performance );
+
+posterior_tuned = dirichletPosteriorEstimation( errMatTraining, 10000, αSequence[best_index] );
+@test all( posterior_tuned .>= 0.0 )
+@test all( posterior_tuned .<= 1.0 )
+@test sum( posterior_tuned ) ≈ 1.0
+
+posteriorUni = zeros( Float64, size( errMatTraining, 2 ) )
+fill!( posteriorUni, 1 / size( errMatTraining, 2 ) );
+
+yUni = AgnosticBayesEnsemble.predictEnsemble( predMatEval, posteriorUni );
+yDir = AgnosticBayesEnsemble.predictEnsemble( predMatEval, posterior_tuned );
+
+@test lossFunctions.hingeLoss( yDir, tEval ) < lossFunctions.hingeLoss( yUni, tEval )
