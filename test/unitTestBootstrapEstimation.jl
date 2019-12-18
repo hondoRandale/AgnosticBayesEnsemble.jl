@@ -18,8 +18,3 @@ bootstrapPosteriorEstimation!( errMatTraining, 100, 10000, posterior );
 @test all( posterior .>= 0.0 );
 @test all( posterior .<= 1.0 );
 @test all( sum( posterior ) ≈ 1.0 );
-
-posterior = bootstrapPosteriorEstimationP( errMatTraining, 100, 10000 );
-@test all( posterior .>= 0.0 );
-@test all( posterior .<= 1.0 );
-@test all( sum( posterior ) ≈ 1.0 );

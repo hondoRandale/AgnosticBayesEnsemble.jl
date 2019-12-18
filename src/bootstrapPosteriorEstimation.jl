@@ -47,36 +47,3 @@ using StaticArrays
       p[i] = val;
     end 
   end
-
-  """
-      bootstrapPosteriorEstimationP( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
-
-
-
-      compute posterior p( h* = h | S ).
-      #Arguments
-      - `errMat::Matrix{Float64}`:  each column is the prediction error of one hypothesis.
-      - `samplingBatchSize::Int64`: label vector.
-      - `nrRuns::Int64`:            number of passes over predictions.
-      #Return
-      - `Vector{Float64}`:          posterior p( h* = h | S ).
-  """
-  function bootstrapPosteriorEstimationP( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
-    tasks = Vector{Task}( undef, Threads.nthreads() );
-    width = size( errMat, 2 );
-    res   = Vector{ Vector{Float64} }( undef, Threads.nthreads() );
-    p     = zeros( Float64, width );
-    for i=1:1:Threads.nthreads()
-      res[i]   = zeros( Float64, width );
-      a()      = bootstrapPosteriorEstimation!( errMat, samplingBatchSize, nrRuns, res[i] );
-      tasks[i] = Task( a );
-    end
-    for i in 1:1:Threads.nthreads()
-      schedule( tasks[i] );
-      yield();
-    end
-    for vec in res
-      p .+= vec;
-    end
-    return p ./ Threads.nthreads();
-  end
