@@ -25,3 +25,9 @@ using Test
   
   @test all( minIndices .>= 1 )
   @test all( minIndices .<= 3 )
+
+  minIndices = zeros( Int64, len );
+  argminProb!( vmatrix, minIndices );
+
+  @test all( minIndices .>= 1 )
+  @test all( minIndices .<= 3 )
