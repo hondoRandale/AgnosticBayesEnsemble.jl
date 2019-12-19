@@ -16,7 +16,7 @@ module argmaxUniProb
   """
   function argmaxProb( r::Matrix{Float64} )
     index = Vector{Int64}( undef, size( r, 1 ) );
-    for i in size( index, 1 )
+    for i in 1:1:size( index, 1 )
       index[i] = argmaxProb( r[i,:] );
     end
     return index; 
@@ -37,7 +37,7 @@ module argmaxUniProb
   """
   function argmaxProb!( r::Matrix{Float64}, v::Vector{Int64} )
     @assert size( v,1 ) == size( r, 2 );
-    for i=1:size( v, 1 )
+    for i in 1:1:size( v, 1 )
      v[i] = argmaxProb( r[i,:] );
     end
   end
