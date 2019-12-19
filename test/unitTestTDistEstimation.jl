@@ -1,3 +1,4 @@
+include( "../src/TDistPosteriorEstimation.jl" )
 using DataFrames
 using Random
 using Statistics
@@ -9,7 +10,7 @@ println( "running T-Distribution algorithm unit tests" );
 
 predMatTraining, predMatEval, yTraining, yEval, errMatTraining = makeupPredictions();
 
-posterior = TDistPosteriorEstimationReference( errMatTraining, 10000 )
+posterior = TDistPosteriorEstimationReference( errMatTraining, 10000 );
 
 @test all( posterior .>= 0.0 );
 @test all( posterior .<= 1.0 );

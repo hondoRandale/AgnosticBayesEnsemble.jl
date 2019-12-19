@@ -1,13 +1,6 @@
   using Distributions
   using ProgressMeter
-
-  function metaParamSearchValidationTDist()
-    
-  end
-  
-  function metaParamSearchValidationTDistOptv1()
-    
-  end
+  using LinearAlgebra
 
   """
       TDistPosteriorEstimationReference( errMat::Matrix{Float64}, nrRuns::Int64 )
@@ -92,10 +85,8 @@
       ## sample ϵ from univariate chi-squared
       ϵ           = rand( chiSquaredDist );
       r           =  r_m .+ z * sqrt( v_ / ϵ ); 
-      label       = argminProb( r );
+      label       = argminUniProb.argminProb( r );
       res[label] += 1;
     end
     return  res ./ nrRuns;
   end
-
-  ## TDistPosteriorEstimation( errMat, 10000000, κ_0 = 2000000000.0, v_0 = 0.05, α = 0.000000000001 )
