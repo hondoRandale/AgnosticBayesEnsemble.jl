@@ -40,7 +40,10 @@ posterior_tuned = dirichletPosteriorEstimation( errMatTraining, 10000, αSequenc
 posteriorUni = zeros( Float64, size( errMatTraining, 2 ) )
 fill!( posteriorUni, 1 / size( errMatTraining, 2 ) );
 
-yUni = AgnosticBayesEnsemble.predictEnsemble( predMatEval, posteriorUni );
-yDir = AgnosticBayesEnsemble.predictEnsemble( predMatEval, posterior_tuned );
-
-@test lossFunctions.hingeLoss( yDir, tEval ) < lossFunctions.hingeLoss( yUni, tEval )
+yUni = round.( AgnosticBayesEnsemble.predictEnsemble( predMatEval, posteriorUni ) );
+yDir = round.( AgnosticBayesEnsemble.predictEnsemble( predMatEval, posterior_tuned ) );
+YHopfieldUni = deepcopy( yUni );
+YHopfieldDir = deepcopy( yDir );
+toHopfieldEncoding!( YHopfieldUni, yUni );
+toHopfieldEncoding!( YHopfieldDir, yDir );
+@test mean( lossFunctions.hingeLoss( yDir, tEval ) ) < mean( lossFunctions.hingeLoss( yUni, tEval ) )
