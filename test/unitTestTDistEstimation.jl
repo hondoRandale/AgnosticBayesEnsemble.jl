@@ -6,7 +6,7 @@ using Test
 using Optim
 using MultivariateStats
 
-println( "running T-Distribution algorithm unit tests" );
+println( "running T-Distribution algorithm unit tests." );
 
 predMatTraining, predMatEval, yTraining, yEval, errMatTraining = makeupPredictions();
 

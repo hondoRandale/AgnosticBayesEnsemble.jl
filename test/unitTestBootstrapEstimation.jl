@@ -6,7 +6,7 @@ using Test
 using Optim
 using MultivariateStats
 
-println( "running bootstrap algorithm unit tests" );   
+println( "running bootstrap algorithm unit tests." );   
 predMatTraining, predMatEval, yTraining, yEval, errMatTraining = makeupPredictions();
 posterior = bootstrapPosteriorEstimation( errMatTraining, 64, 10000 );
 @test all( posterior .>= 0.0 );

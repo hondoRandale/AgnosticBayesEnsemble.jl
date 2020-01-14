@@ -54,7 +54,7 @@ using LinearAlgebra
     for i in 1:1:nrRuns
       samplingIndexCache = rand( 1:len, lenCache );
       for index in 1:1:width
-        cache[index] = sum( transpose( predictions[i][samplingIndexCache,:] ) .* T[samplingIndexCache,:] )
+        cache[index] = sum( predictions[index][samplingIndexCache,:] .* T[samplingIndexCache,:] )
       end
       label       = argmaxUniProb.argmaxProb( cache );
       res[label] += 1; 

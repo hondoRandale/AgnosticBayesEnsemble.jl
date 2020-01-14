@@ -1,4 +1,3 @@
-##include( "../src/AgnosticBayesEnsemble.jl" )
 include( "../src/gradientDescentOptimizePosterior.jl" )
 using DataFrames
 using Random
@@ -7,7 +6,7 @@ using Test
 using Optim
 using MultivariateStats
 
-println( "running gradient descent algorithms unit tests" );
+println( "running gradient descent algorithms unit tests." );
 predMatTraining, predMatEval, tTraining, tEval, errMatTraining = makeupPredictions();
 d         = size( predMatTraining, 2 );
 YHopfield = deepcopy( predMatTraining );

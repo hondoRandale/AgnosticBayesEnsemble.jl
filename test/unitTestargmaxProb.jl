@@ -1,7 +1,7 @@
 include( "../src/argmaxProb.jl" )
 using Test
 
-  println( "running argmaxProb unit tests" );
+  println( "running argmaxProb unit tests." );
 
   vec = repeat( [23.8], outer=[3 1] )[:,1];
   append!( vec, rand( 4.0:20.0, 100 ) );
