@@ -43,6 +43,12 @@ result = δOptimizationHinge( posteriorStart, YHopfield, tHopfield, 20 );
 resultDF, parameterEvalDf = δTuneHingeMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=2, siblings=100 );
 resultDF, parameterEvalDf = δTuneMSEMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=2, siblings=100 );
 
+#** Expirement3: train randomly initialized with MSE  **#
+posterior          = randPosterior( d );
+solutionRefinedMSE = δOptimizationMSE( posterior, YHopfield, tHopfield, 20 );
+mseRand            = mean( MSE.( predMat * posterior, T ) );
+mseMSE             = mean( MSE.( predMat * solutionRefinedMSE, T ) )
+@test mseRand > mseMSE    
 ##show( resultDF )
 ##how( parameterEvalDf )
 
