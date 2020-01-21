@@ -129,11 +129,11 @@ using MultivariateStats
 
 #== create artificial predictions and ground truth ==#
 function distortBinaryPrediction( y::BitArray{1}, distortionFactor::Float64 )
-​    res          = deepcopy( y );  
-​    indices      = rand( 1:1:size( y, 1 ), round( Int64, distortionFactor * size( y, 1 ) ) );
-​    res[indices] = .!y[indices];
-​    return res;
-end  
+    res          = deepcopy( y );   
+    indices      = rand( 1:1:size( y, 1 ), round( Int64, distortionFactor * size( y, 1 ) ) );
+    res[indices] = .!y[indices];
+    return res;
+end
 
 n    = 100000;
 y    = Bool.( rand( 0:1,n ) );
@@ -153,6 +153,7 @@ yH13 = distortBinaryPrediction( y, 0.34 );
 yH14 = distortBinaryPrediction( y, 0.35 );
 yH15 = distortBinaryPrediction( y, 0.36 );
 yH16 = distortBinaryPrediction( y, 0.37 );
+y    = Float64.( y );
 
 #== split generated prediction set into disjoint sets eval and train==#
 limit           = round( Int64, 0.7 * size( y, 1 ) );
@@ -164,25 +165,26 @@ predMatEval     = convert( Matrix{Float64}, predEval );
 errMatTraining  = ( repeat( Float64.( y[1:limit] ),outer = [1,size(predictions,2)] ) .- predMatTraining ).^2;
 errMatTraining  = convert( Matrix{Float64}, errMatTraining );
 sampleSize      = 32
-nrRuns          = 100000
+nrRuns          = 10000
 α_              = 1.0
 
 #== use bootstrap correlation algorithm to estimate the model posterior  distribution ==#
-P = bootstrapPosteriorCorEstimation( predictions, y, sampleSize, nrRuns );
+PBC = bootstrapPosteriorCorEstimation( predMatTraining, y, sampleSize, nrRuns );
 
 #== use bootstrap algorithm to estimate the model posterior distribution ==#
-p = bootstrapPosteriorEstimation( Matrix( errMatTraining ), sampleSize, nrRuns ); 
+pB  = bootstrapPosteriorEstimation( errMatTraining, sampleSize, nrRuns ); 
 
 #== use Dirichletian algorithm to estimate the model posterior distribution ==#
-P = dirichletPosteriorEstimation( errMatTraining, nrRuns, α_ );
+PD  = dirichletPosteriorEstimation( errMatTraining, nrRuns, α_ );
 
 #== use T-Distribution algorithm to estimate the model posterior distribution ==#
-P = TDistPosteriorEstimation( errMatTraining, nrRuns );
+PT  = TDistPosteriorEstimation( errMatTraining, nrRuns );
 
+sum( PBC ) + sum( pB ) + sum( PD ) + sum( PT ) ≈ 4.0
 
+# output
 
-#== make ensemble prediction ==#
-prediction = predictEnsemble( predictionsEval, p );
+true
 ```
 """
 

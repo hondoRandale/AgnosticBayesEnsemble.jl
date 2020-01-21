@@ -27,3 +27,10 @@ b[index_b] .= -1.0;
 @test mean( lossFunctions.hingeLoss( a, b ) ) == 2.0
 @test mean( lossFunctions.hingeLoss( a, a ) ) == 0.0
 @test mean( lossFunctions.hingeLoss( b, b ) ) == 0.0
+
+@test lossFunctions.MSE( 1.0, 1.0 ) == 0.0
+@test lossFunctions.MSE( 0.0, 0.0 ) == 0.0
+@test lossFunctions.MSE( 1.0, 0.0 ) == 1.0
+@test lossFunctions.MSE( 0.0, 1.0 ) == 1.0
+@test lossFunctions.MSE( 0.0, 10.0 ) == 100.0
+@test lossFunctions.MSE( 10.0, 0.0 ) == 100.0
