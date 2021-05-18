@@ -39,7 +39,8 @@ lossLinearBasisNormalized = mean( lossFunctions.hingeLoss( AgnosticBayesEnsemble
 result                    = δOptimizationHinge( posteriorStart, YHopfield, tHopfield, 20 );
 
 resultDF, parameterEvalDf = δTuneHingeMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=2, siblings=100 );
-resultDF, parameterEvalDf = δTuneMSEMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), generations=2, siblings=100 );
+## looks bad MSE in classification setting
+##resultDF, parameterEvalDf = δTuneMSEMeta(;posterior=posteriorStart, predMat=YHopfield, T=tHopfield, nrRunsRange=(3.0,10.0), αRange=(0.0,4.0), βRange=(0.0,4.0), relEntropyRange=(0.65,0.999), ##generations=2, siblings=100 );
 
 #** Expirement 3: start with random Dist. **#
 posteriorRand   = randPosterior( d );
