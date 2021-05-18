@@ -17,9 +17,9 @@ version = "3.5.0+3"
 
 [[ArrayInterface]]
 deps = ["IfElse", "LinearAlgebra", "Requires", "SparseArrays", "Static"]
-git-tree-sha1 = "b08be763d0b8ddee6b162016dad746a69980616d"
+git-tree-sha1 = "af516010f3d8c690d2207b12445aaa45da63e9fb"
 uuid = "4fba245c-0d91-5ea0-9b3e-6abc04ee57a9"
-version = "3.1.11"
+version = "3.1.14"
 
 [[Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
@@ -47,9 +47,9 @@ version = "0.7.7"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "bd0cc939d94b8bd736dce5bbbe0d635db9f94af7"
+git-tree-sha1 = "9b0375dc013ab0fc472b37cb8b18eed66b83f76b"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "0.9.41"
+version = "0.9.43"
 
 [[CommonSubexpressions]]
 deps = ["MacroTools", "Test"]
@@ -328,9 +328,9 @@ uuid = "429524aa-4258-5aef-a3af-852621145aeb"
 version = "0.18.1"
 
 [[OrderedCollections]]
-git-tree-sha1 = "4fa2ba51070ec13fcc7517db714445b4ab986bdf"
+git-tree-sha1 = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"
 uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
-version = "1.4.0"
+version = "1.4.1"
 
 [[PDMats]]
 deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse"]
@@ -368,9 +368,9 @@ version = "0.2.4"
 
 [[Preferences]]
 deps = ["TOML"]
-git-tree-sha1 = "ea79e4c9077208cd3bc5d29631a26bc0cff78902"
+git-tree-sha1 = "00cfd92944ca9c760982747e9a1d0d5d86ab1e5a"
 uuid = "21216c6a-2e73-6563-6e65-726566657250"
-version = "1.2.1"
+version = "1.2.2"
 
 [[Printf]]
 deps = ["Unicode"]
@@ -455,10 +455,10 @@ deps = ["LinearAlgebra", "Random"]
 uuid = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [[SpecialFunctions]]
-deps = ["ChainRulesCore", "OpenSpecFun_jll"]
-git-tree-sha1 = "5919936c0e92cff40e57d0ddf0ceb667d42e5902"
+deps = ["ChainRulesCore", "LogExpFunctions", "OpenSpecFun_jll"]
+git-tree-sha1 = "9146da51b38e9705b9f5ccfadc3ab10a482cae36"
 uuid = "276daf66-3868-5448-9aa4-cd146d93841b"
-version = "1.3.0"
+version = "1.4.0"
 
 [[Static]]
 deps = ["IfElse"]
@@ -468,9 +468,9 @@ version = "0.2.4"
 
 [[StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
-git-tree-sha1 = "2653e9c769343808781a8bd5010ee7a17c01152e"
+git-tree-sha1 = "fb46e45ef2cade8be20bb445b3ffeca3c6d6f7d3"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.1.2"
+version = "1.1.3"
 
 [[Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
