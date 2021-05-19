@@ -1,5 +1,4 @@
 using ProgressMeter
-using StaticArrays
 
   """
       bootstrapPosteriorEstimation( errMat::Matrix{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
