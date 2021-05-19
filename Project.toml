@@ -1,6 +1,6 @@
 name = "AgnosticBayesEnsemble"
-uuid = "c45979d0-65bc-461f-b799-33f894c17e9f"
-authors = ["Jules Rasetaharison <Jules.Rasetaharison@auticon.de>"]
+uuid = "f9b10958-7b7e-4895-a437-5e9e3e59e404"
+authors = ["hondoRandale <jules.rasetaharison@auticon.de>"]
 version = "0.2.2"
 
 [deps]
@@ -21,10 +21,10 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-CSV = "0.8.0,0.8.4"
+CSV = "0.6.0,0.8.4"
 DataFrames = "1.0.0,1.1.1"
 Distributions = "0.18.0,0.24.18"
-Documenter = "~0.26.3"
+Documenter = "^0.20"
 DocumenterTools = "~0.1.10"
 GLM = "1.0,1.4.2"
 LineSearches = "^7.0"
