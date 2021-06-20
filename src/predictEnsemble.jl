@@ -32,7 +32,7 @@
     len = size( weights, 1 );
     res = zeros( Float64, size( predictions[1], 1 ), size( predictions[1], 2 ) );
     for i in 1:1:len
-      res .+= weights[i] .* predictions[i];
+      @inbounds res .+= weights[i] .* predictions[i];
     end
     return res
   end

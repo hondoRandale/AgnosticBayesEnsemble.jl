@@ -16,15 +16,15 @@ using LinearAlgebra
       #Return
       - `Vector{Float64}`:              posterior p( h* = h | S ). 
   """
-  function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, t::Vector{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
+  @views function bootstrapPosteriorCorEstimation( predictions::Matrix{Float64}, t::Vector{Float64}, samplingBatchSize::Int64, nrRuns::Int64 )
     len      = size( predictions )[1];
     width    = size( predictions )[2];
     lenCache = samplingBatchSize;
     res      = zeros( Int64, width );
-    for i in 1:1:nrRuns
-      samplingIndexCache = rand( 1:size( predictions, 1 ), lenCache );
-      label              = argmaxUniProb.argmaxProb( ( transpose( predictions[samplingIndexCache,:] ) * t[samplingIndexCache]  ) );
-      res[label]        += 1; 
+    @showprogress 1 "Computing..." for i in 1:1:nrRuns
+      @inbounds samplingIndexCache = rand( 1:size( predictions, 1 ), lenCache );
+      @inbounds label              = argmaxUniProb.argmaxProb( ( transpose( predictions[samplingIndexCache,:] ) * t[samplingIndexCache]  ) );
+      @inbounds res[label]        += 1; 
     end
     return  res ./ nrRuns; 
   end
@@ -45,19 +45,19 @@ using LinearAlgebra
       #Return
       - `Vector{Float64}`:              posterior p( h* = h | S ). 
   """
-  function bootstrapPosteriorCorEstimation( predictions::Vector{Matrix{Float64}}, T::Matrix{Float64}, samplingFactor::Float64, nrRuns::Int64 )
+  @views function bootstrapPosteriorCorEstimation( predictions::Vector{Matrix{Float64}}, T::Matrix{Float64}, samplingFactor::Float64, nrRuns::Int64 )
     len      = size( T, 1 );
     width    = size( predictions, 1 );
     lenCache = round( Int64, samplingFactor * len );
     res      = zeros( Int64, width );
     cache    = zeros( Float64, width );
-    for i in 1:1:nrRuns
+    @showprogress 1 "Computing..." for i in 1:1:nrRuns
       samplingIndexCache = rand( 1:len, lenCache );
       for index in 1:1:width
-        cache[index] = sum( predictions[index][samplingIndexCache,:] .* T[samplingIndexCache,:] )
+        @inbounds cache[index] = sum( predictions[index][samplingIndexCache,:] .* T[samplingIndexCache,:] )
       end
-      label       = argmaxUniProb.argmaxProb( cache );
-      res[label] += 1; 
+      label                 = argmaxUniProb.argmaxProb( cache );
+      @inbounds res[label] += 1; 
     end
     return  res ./ nrRuns; 
   end

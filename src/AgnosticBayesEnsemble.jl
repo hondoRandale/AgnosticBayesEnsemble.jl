@@ -9,10 +9,7 @@ module AgnosticBayesEnsemble
          TDistPosteriorEstimation, TDistPosteriorEstimationReference,
          predictEnsemble,
          directOptimNaiveMSE, directOptimHinge,
-         posteriorLinearBasis, toHopfieldEncoding!,
-         δOptimizationHinge, δOptimizationHingeRegularized,
-         δOptimizationMSE, δOptimizationMSERegularized,
-         δTuneMSEMeta, δTuneHingeMeta
+         posteriorLinearBasis
 
   include( "argmaxProb.jl" )
   include( "argminProb.jl" )       
@@ -20,9 +17,7 @@ module AgnosticBayesEnsemble
   include( "bootstrapPosteriorEstimation.jl" )
   include( "directSolution.jl" )
   include( "dirichletPosteriorEstimation.jl" )
-  include( "gradientDescentOptimizePosterior.jl" )
   include( "predictEnsemble.jl" )
-  include( "TDistPosteriorEstimation.jl" )
   
 end
 

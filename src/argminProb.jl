@@ -35,7 +35,7 @@ module argminUniProb
       #Return
         - `nothing`:            nothing.
   """
-  function argminProb!( r::Matrix{Float64}, v::Vector{Int64} )
+  function argminProb!( r::Matrix{Float64}, v::AbstractVector )
     @assert size( v,1 ) == size( r, 2 );
     for i in 1:1:size( v, 1 )
       v[i] = argminProb( r[i,:] );
@@ -53,7 +53,7 @@ module argminUniProb
       #Return
         - `Vector{Float64}`:         indices of minimal values.  
   """
-  function argminProb( values::Vector{Float64} )
+  function argminProb( values::AbstractVector )
     minPositions = collect( 1:1:size( values, 1 ) )[ values .== minimum( values ) ];
     if size( minPositions, 1 ) > 1
       res = minPositions[ rand( 1:size( minPositions, 1 ) ) ];  

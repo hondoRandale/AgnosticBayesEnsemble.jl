@@ -1,6 +1,5 @@
 include( "../src/AgnosticBayesEnsemble.jl" )
 include( "../src/dirichletPosteriorEstimation.jl" )
-include( "../src/gradientDescentOptimizePosterior.jl" )
 using DataFrames
 using Random
 using Statistics
@@ -42,8 +41,4 @@ fill!( posteriorUni, 1 / size( errMatTraining, 2 ) );
 
 yUni = round.( AgnosticBayesEnsemble.predictEnsemble( predMatEval, posteriorUni ) );
 yDir = round.( AgnosticBayesEnsemble.predictEnsemble( predMatEval, posterior_tuned ) );
-YHopfieldUni = deepcopy( yUni );
-YHopfieldDir = deepcopy( yDir );
-toHopfieldEncoding!( YHopfieldUni, yUni );
-toHopfieldEncoding!( YHopfieldDir, yDir );
-@test mean( lossFunctions.hingeLoss( yDir, tEval ) ) < mean( lossFunctions.hingeLoss( yUni, tEval ) )
+

@@ -35,7 +35,7 @@ module argmaxUniProb
       #Return
         - `nothing`:            nothing.
   """
-  function argmaxProb!( r::Matrix{Float64}, v::Vector{Int64} )
+  function argmaxProb!( r::Matrix{Float64}, v::AbstractVector )
     @assert size( v,1 ) == size( r, 2 );
     for i in 1:1:size( v, 1 )
      v[i] = argmaxProb( r[i,:] );
@@ -53,7 +53,7 @@ module argmaxUniProb
       #Return
         - `Vector{Float64}`:         indices of maximal values.  
   """
-  function argmaxProb( values::Vector{Float64} )
+  function argmaxProb( values::AbstractVector )
     maxPositions = collect( 1:1:size( values, 1 ) )[ values .== maximum( values ) ];
     if size( maxPositions, 1 ) > 1
       res = maxPositions[ rand( 1:size( maxPositions, 1 ) ) ];  
