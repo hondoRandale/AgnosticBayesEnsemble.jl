@@ -117,10 +117,7 @@ pBE  = bootstrapPosteriorEstimation( Matrix( errMatTraining ), sampleSize, nrRun
 #== use Dirichletian algorithm to estimate the model posterior distribution ==#
 pDI = dirichletPosteriorEstimation( errMatTraining, nrRuns, α_ );
 
-#== use T-Distribution algorithm to estimate the model posterior distribution ==#
-pTD = TDistPosteriorEstimation( errMatTraining, nrRuns );
-
-sum( pBCE ) + sum( pBE ) + sum( pDI ) + sum( pTD ) ≈ 4.0
+sum( pBCE ) + sum( pBE ) + sum( pDI )  ≈ 3.0
 # output
 true
 ```
